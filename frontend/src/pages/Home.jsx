@@ -13,11 +13,7 @@ function Home() {
                     <h1>Home</h1>
                     <p>Check latest performance reviews and appraisal forms ongoing</p>
                 </div>
-                {/* <div class="container">
-                    <div>Apply Appraisal</div>
-                    <div>Apply Probation</div>
-                    <div>Hi</div>
-                </div> */}
+            
                 <div class="container">
                     {uses.map((use) => (
                         <a href={use.link}><div id={use.id}>{use.name}</div></a>

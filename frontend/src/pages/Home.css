@@ -1,18 +1,11 @@
-:root {
-    --primary-green: #00703c;
-    --emerald: #2ecc71;
-    --soft-white: #f4f7f6;
-    --dark-text: #2c3e50;
-    --border-color: #ddd;
-}
-
 body {
-    background-color: #50c878;
+    background-color: var(--main-bg-color);
 }
 
 /* GRID SECTION */
 .home-section .info p {
     color: black;
+    font-size: var(--p-font-size);
 }
 
 .home-section .container {
@@ -28,8 +21,7 @@ body {
 
 .home-section .container div {
     background-color: #50c878;
-    color: black;
-    border: 1px solid black;
+    color: blue;
     padding: 10px;
     text-align: center;
 }
@@ -37,4 +29,7 @@ body {
 .home-section .container a {
     text-decoration: none;
     font-weight: bold;
+    border: 1px solid;
 }
+
+

@@ -15,6 +15,12 @@
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
 
+  /* MAIN STYLINGS */
+  --main-bg-color: #50c878;
+  --h1-font-size: 20px;
+  --h2-font-size: 17px;
+  --p-font-size: 10x;
+
   font: 18px/145% var(--sans);
   letter-spacing: 0.18px;
   color-scheme: light dark;

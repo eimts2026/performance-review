@@ -19,6 +19,12 @@
     display: flex;
     margin: 0;
     padding: 0;
+    gap: 20px;
+}
+
+.navbar-center .nav-links li a {
+    text-decoration: none;
+    color: white;
 }
 
 .navbar-center .nav-link li {
