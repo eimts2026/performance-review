@@ -1,9 +1,4 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import ReactDOM from 'react-dom/client'
-import { BrowserReact } from 'react-router-dom'
-import heroImg from './assets/hero.png'
+import { Routes, Route } from 'react-router-dom' // Fixed imports
 import './App.css'
 
 // Page Imports

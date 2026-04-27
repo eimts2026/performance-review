@@ -1,0 +1,50 @@
+/* About Section Specific Styling */
+.about-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--soft-white);
+    padding-bottom: 15px;
+}
+
+.badge {
+    background-color: #e74c3c;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.lead-text {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: #444;
+}
+
+.mission-statement {
+    background-color: var(--soft-white);
+    padding: 20px;
+    border-radius: 8px;
+    margin: 30px 0;
+    border-left: 4px solid var(--emerald);
+}
+
+.mission-statement h3 {
+    margin-top: 0;
+    color: var(--primary-green);
+}
+
+.version-info {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+    font-size: 0.9rem;
+    color: #888;
+}
+
+.version-info p {
+    margin: 5px 0;
+}
