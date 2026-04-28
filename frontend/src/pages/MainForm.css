@@ -15,6 +15,7 @@
 
 /* Grid Design */
 .form-grid {
+    /* this controls the entire form */
     display: grid;
     grid-template-columns: auto auto auto;
     /* background-color:gold; */
@@ -22,26 +23,40 @@
     gap: 40px 40px;
     margin-left: 155px;
     grid-template-columns: repeat(2, 0.4fr);
+    justify-items: start;
 }
 
 .form-grid div label {
+    /* this affects the labels */
     color: black;
     padding-right: 10px;
 }
 
 .form-grid div {
-    background-color: gold;
+    /* this acts like an invisible box for each */
+    background-color: none;
     padding-bottom: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.form-grid div input {
+    
 }
 
 /* HR TABLE DESIGN */
-.hr .hr-table tr th {
-    font-weight: bold;
-    color: black;
-    padding-left: 140px;
+.hr #header {
+    display: inline;
 }
 
-.hr .hr-table tr ol {
+.hr #header th {
+    border: 1px solid black;
+    margin-left: 200px;
     color: black;
-    padding-left: 140px;
+    padding: auto;
+    padding: 20px;
+}
+
+.hr #header #monitored {
+    padding-right: 618px;
 }

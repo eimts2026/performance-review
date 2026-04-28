@@ -1,5 +1,15 @@
 import './MainForm.css'
 
+const form_top = [
+    {id: "ap-name", name: "Appraiser Name:", type: "text"},
+    {id: "emp-name", name: "Employee Name:", type: "text"},
+    {id: "pos", name: "Position:", type: "text"},
+    {id: "rev-per", name: "Review Period:", type: "date"},
+    {id: "join-dt", name: "Date Joined:", type: "date"},
+    {id: "rev-dt", name: "Reviewed Date:", type: "date"},
+    {id: "mgr", name: "Manager:", type: "text"},
+]
+
 function MainForm() {
     return (
         <>
@@ -35,12 +45,17 @@ function MainForm() {
 
                         <div id='join-dt'>
                             <label for='join-dt'>Date Joined:</label>
-                            <input type='date' id='join-dt' />
+                            <input type='date' irev-dtd='join-dt' />
                         </div>
 
                         <div id='rev-dt'>
                             <label for='rev-dt'>Reviewed Date:</label>
                             <input type='date' id='rev-dt' />
+                        </div>
+
+                        <div id='mgr'>
+                            <label for='mgr'>Manager Email:</label>
+                            <input type='text' id='mgr' />
                         </div>
                     </div>
 
@@ -58,7 +73,14 @@ function MainForm() {
 
                     {/* HR MONITORING GRID */}
                     <div class='hr'>
-                        {/* Have to add a map function to easily render it */}
+                        <tr id='header'>
+                            <th id='monitored'>Monitored by HR Department</th>
+                            <th>A</th>
+                            <th>B</th>
+                            <th>C</th>
+                            <th>D</th>
+                            <th>E</th>
+                        </tr>
                     </div>
                 </form>
             </section>
