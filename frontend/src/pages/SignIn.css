@@ -1,0 +1,4 @@
+.signin-section .container p {
+    font-size: var(--p-font-size);
+    color: black;
+}

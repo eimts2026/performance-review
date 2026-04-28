@@ -5,6 +5,7 @@ import './App.css'
 import Home from './pages/Home'
 import MainForm from './pages/MainForm'
 import About from './pages/About'
+import SignIn from './pages/SignIn'
 
 // NavBar
 import NavBar from './components/NavBar'

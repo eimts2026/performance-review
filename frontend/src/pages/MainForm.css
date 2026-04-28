@@ -1,4 +1,47 @@
-.form-section .info p {
+.form-section p, .form-section ul li {
     font-size: var(--p-font-size);
     color: black;
+}
+
+/* List Design */
+.form-section .form ul li {
+    list-style-type: none;
+}
+
+.form-section .form .index h3 {
+    font-weight: bold;
+    color: black;
+}
+
+/* Grid Design */
+.form-grid {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    /* background-color:gold; */
+    padding: 10px;
+    gap: 40px 40px;
+    margin-left: 155px;
+    grid-template-columns: repeat(2, 0.4fr);
+}
+
+.form-grid div label {
+    color: black;
+    padding-right: 10px;
+}
+
+.form-grid div {
+    background-color: gold;
+    padding-bottom: 5px;
+}
+
+/* HR TABLE DESIGN */
+.hr .hr-table tr th {
+    font-weight: bold;
+    color: black;
+    padding-left: 140px;
+}
+
+.hr .hr-table tr ol {
+    color: black;
+    padding-left: 140px;
 }
