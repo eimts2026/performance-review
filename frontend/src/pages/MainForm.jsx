@@ -23,40 +23,12 @@ function MainForm() {
                 <form class='form'>
                     {/* FORM GRID */}
                     <div class='form-grid'>
-                        <div id='ap-name'>
-                            <label for='ap-name'>Appraiser Name:</label>
-                            <input type='text' id='ap-name' />
-                        </div>
-
-                        <div id='emp-name'>
-                            <label for='emp-name'>Employee Name:</label>
-                            <input type='text' id='emp-name' />
-                        </div>
-
-                        <div id='pos'>
-                            <label for='pos'>Position</label>
-                            <input type='text' id='pos' />
-                        </div>
-
-                        <div id='rev-per'>
-                            <label for='rev-per'>Review Period:</label>
-                            <input type='number' id='rev-per' />
-                        </div>
-
-                        <div id='join-dt'>
-                            <label for='join-dt'>Date Joined:</label>
-                            <input type='date' irev-dtd='join-dt' />
-                        </div>
-
-                        <div id='rev-dt'>
-                            <label for='rev-dt'>Reviewed Date:</label>
-                            <input type='date' id='rev-dt' />
-                        </div>
-
-                        <div id='mgr'>
-                            <label for='mgr'>Manager Email:</label>
-                            <input type='text' id='mgr' />
-                        </div>
+                        {form_top.map((forms) => (
+                            <>
+                                <label for={forms.id}>{forms.name}</label>
+                                <input type={forms.type} id={forms.id} />
+                            </>
+                        ))}
                     </div>
 
                     {/* INDEX */}
