@@ -3,6 +3,7 @@
     color: black;
 }
 
+
 /* List Design */
 .form-section .form ul li {
     list-style-type: none;
@@ -38,18 +39,4 @@
 }
 
 /* HR TABLE DESIGN */
-.hr #header {
-    display: inline;
-}
-
-.hr #header th {
-    border: 1px solid black;
-    margin-left: 200px;
-    color: black;
-    padding: auto;
-    padding: 20px;
-}
-
-.hr #header #monitored {
-    padding-right: 618px;
-}
+.hr-table 

@@ -44,8 +44,8 @@ function MainForm() {
                     </div>
 
                     {/* HR MONITORING GRID */}
-                    <div class='hr'>
-                        <tr id='header'>
+                    <table class='hr-table'>
+                        <tr id='line-1'>
                             <th id='monitored'>Monitored by HR Department</th>
                             <th>A</th>
                             <th>B</th>
@@ -53,7 +53,48 @@ function MainForm() {
                             <th>D</th>
                             <th>E</th>
                         </tr>
-                    </div>
+                        <tr id='line'>
+                            <td>Attendance</td>
+                            <td><input type='checkbox' /></td>
+                            <td><input type='checkbox' /></td>
+                            <td><input type='checkbox' /></td>
+                            <td><input type='checkbox' /></td>
+                            <td><input type='checkbox' /></td>
+                        </tr>
+                        <tr id='line'>
+                            <td>Punctuality</td>
+                            <td><input type='checkbox' /></td>
+                            <td><input type='checkbox' /></td>
+                            <td><input type='checkbox' /></td>
+                            <td><input type='checkbox' /></td>
+                            <td><input type='checkbox' /></td>
+                        </tr>
+                        <tr id='line'>
+                            <td>Adhere Management decisions, Company Rules & Regulation</td>
+                            <td><input type='checkbox' /></td>
+                            <td><input type='checkbox' /></td>
+                            <td><input type='checkbox' /></td>
+                            <td><input type='checkbox' /></td>
+                            <td><input type='checkbox' /></td>
+                        </tr>
+                        <tr id='line'>
+                            <td>Employee Engagement</td>
+                            <td><input type='checkbox' /></td>
+                            <td><input type='checkbox' /></td>
+                            <td><input type='checkbox' /></td>
+                            <td><input type='checkbox' /></td>
+                            <td><input type='checkbox' /></td>
+                        </tr>
+                        <tr id='line'>
+                            <td>Professional Qualification</td>
+                            <td><input type='checkbox' /></td>
+                            <td><input type='checkbox' /></td>
+                            <td><input type='checkbox' /></td>
+                            <td><input type='checkbox' /></td>
+                            <td><input type='checkbox' /></td>
+                        </tr>
+                    </table>
+                    
                 </form>
             </section>
         </>
