@@ -5,7 +5,8 @@
 
 /* Index design */
 .index #list {
-    
+    display: inline-block;
+    text-align: left;
 }
 
 
@@ -69,4 +70,22 @@
 
 .hr-table #line #option:checked {
     background: #333;
+}
+
+/* Comment Section */
+.comment-section #comment {
+    color: black;
+    display: block;
+    text-align: left;
+    margin-left: 17%;
+}
+
+.comment-section #comment-box {
+    width: 65%;
+    height: 200px;
+}
+
+/* Submit Button */
+.review #review-button{
+    color: black;
 }

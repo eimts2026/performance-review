@@ -70,7 +70,7 @@ function MainForm() {
                         </thead>
                         <tbody>
                             <tr id='line'>
-                                <td>Attendance</td>
+                                <td><label>Attendance</label></td>
                                 {quickRender("attendance")}
                             </tr>
                             <tr id='line'>
@@ -91,7 +91,16 @@ function MainForm() {
                             </tr>
                         </tbody>
                     </table>
-                    
+                    <div class='comment-section'>
+                        <br />
+                        <label id='comment'>Comments:</label>
+                        <br />
+                        <textarea id='comment-box' name='comment-box'></textarea>
+                    </div>
+                    <div class='review'>
+                        <br />
+                        <input id='review-button' type='submit' value='Send for Review'/>
+                    </div>
                 </form>
             </section>
         </>
