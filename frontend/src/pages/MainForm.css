@@ -3,6 +3,11 @@
     color: black;
 }
 
+/* Index design */
+.index #list {
+    
+}
+
 
 /* List Design */
 .form-section .form ul li {
@@ -39,4 +44,29 @@
 }
 
 /* HR TABLE DESIGN */
-.hr-table 
+.hr-table {
+    color: black;
+    justify-self: center;
+}
+
+.hr-table #line-1, .hr-table #line {
+    text-align: left;
+}
+
+.hr-table #line-1 th, .hr-table #line td {
+    border: 1px solid black;
+    padding: 10px;
+}
+
+.hr-table #line #option {
+    box-sizing: border-box;
+    appearance: none;
+    background: white;
+    border: 3px solid white;
+    width: 13px;
+    height: 13px;
+}
+
+.hr-table #line #option:checked {
+    background: #333;
+}

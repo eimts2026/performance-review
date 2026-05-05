@@ -1,4 +1,5 @@
 import './MainForm.css'
+import OptionRender from '../components/OptionRender';
 
 const form_top = [
     {id: "ap-name", name: "Appraiser Name:", type: "text"},
@@ -9,6 +10,18 @@ const form_top = [
     {id: "rev-dt", name: "Reviewed Date:", type: "date"},
     {id: "mgr", name: "Manager:", type: "text"},
 ]
+
+const quickRender = (name) => {
+    console.log("Quick render received name: ", name);
+    const list = []
+
+    for (let i = 0; i < 5; i++) {
+        list.push(<td key={i}><OptionRender name = {name}/></td>)
+    }
+
+    return list;
+}
+
 
 function MainForm() {
     return (
@@ -45,54 +58,38 @@ function MainForm() {
 
                     {/* HR MONITORING GRID */}
                     <table class='hr-table'>
-                        <tr id='line-1'>
-                            <th id='monitored'>Monitored by HR Department</th>
-                            <th>A</th>
-                            <th>B</th>
-                            <th>C</th>
-                            <th>D</th>
-                            <th>E</th>
-                        </tr>
-                        <tr id='line'>
-                            <td>Attendance</td>
-                            <td><input type='checkbox' /></td>
-                            <td><input type='checkbox' /></td>
-                            <td><input type='checkbox' /></td>
-                            <td><input type='checkbox' /></td>
-                            <td><input type='checkbox' /></td>
-                        </tr>
-                        <tr id='line'>
-                            <td>Punctuality</td>
-                            <td><input type='checkbox' /></td>
-                            <td><input type='checkbox' /></td>
-                            <td><input type='checkbox' /></td>
-                            <td><input type='checkbox' /></td>
-                            <td><input type='checkbox' /></td>
-                        </tr>
-                        <tr id='line'>
-                            <td>Adhere Management decisions, Company Rules & Regulation</td>
-                            <td><input type='checkbox' /></td>
-                            <td><input type='checkbox' /></td>
-                            <td><input type='checkbox' /></td>
-                            <td><input type='checkbox' /></td>
-                            <td><input type='checkbox' /></td>
-                        </tr>
-                        <tr id='line'>
-                            <td>Employee Engagement</td>
-                            <td><input type='checkbox' /></td>
-                            <td><input type='checkbox' /></td>
-                            <td><input type='checkbox' /></td>
-                            <td><input type='checkbox' /></td>
-                            <td><input type='checkbox' /></td>
-                        </tr>
-                        <tr id='line'>
-                            <td>Professional Qualification</td>
-                            <td><input type='checkbox' /></td>
-                            <td><input type='checkbox' /></td>
-                            <td><input type='checkbox' /></td>
-                            <td><input type='checkbox' /></td>
-                            <td><input type='checkbox' /></td>
-                        </tr>
+                        <thead>
+                            <tr id='line-1'>
+                                <th id='monitored'>Monitored by HR Department</th>
+                                <th>A</th>
+                                <th>B</th>
+                                <th>C</th>
+                                <th>D</th>
+                                <th>E</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr id='line'>
+                                <td>Attendance</td>
+                                {quickRender("attendance")}
+                            </tr>
+                            <tr id='line'>
+                                <td>Punctuality</td>
+                                {quickRender("punctual")}
+                            </tr>
+                            <tr id='line'>
+                                <td>Adhere Management decisions, Company Rules & Regulation</td>
+                                {quickRender("management")}
+                            </tr>
+                            <tr id='line'>
+                                <td>Employee Engagement</td>
+                                {quickRender("employee")}
+                            </tr>
+                            <tr id='line'>
+                                <td>Professional Qualification</td>
+                                {quickRender("professional")}
+                            </tr>
+                        </tbody>
                     </table>
                     
                 </form>
