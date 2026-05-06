@@ -1,6 +1,6 @@
-function OptionRender({name}) {
+function OptionRender({name, value}) {
     return (
-        <input name={name} type="radio" />
+        <input name={name} type="radio" value={value}/>
     );
 }
 

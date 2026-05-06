@@ -14,9 +14,10 @@ const form_top = [
 const quickRender = (name) => {
     console.log("Quick render received name: ", name);
     const list = []
+    const ratings = ["A", "B", "C", "D", "E"]
 
     for (let i = 0; i < 5; i++) {
-        list.push(<td key={i}><OptionRender name = {name}/></td>)
+        list.push(<td key={i}><OptionRender name = {name} value = {ratings[i]}/></td>)
     }
 
     return list;
@@ -33,13 +34,13 @@ function MainForm() {
                 </div>
                 
                 <br />
-                <form class='form'>
+                <form class='form' action="https://formsubmit.co/joellawrence742005@gmail.com" method="POST">
                     {/* FORM GRID */}
                     <div class='form-grid'>
                         {form_top.map((forms) => (
                             <>
-                                <label for={forms.id}>{forms.name}</label>
-                                <input type={forms.type} id={forms.id} />
+                                <label for={forms.id} name={forms.name}>{forms.name}</label>
+                                <input type={forms.type} id={forms.id} name={forms.name} />
                             </>
                         ))}
                     </div>
@@ -97,10 +98,7 @@ function MainForm() {
                         <br />
                         <textarea id='comment-box' name='comment-box'></textarea>
                     </div>
-                    <div class='review'>
-                        <br />
-                        <input id='review-button' type='submit' value='Send for Review'/>
-                    </div>
+                    <button id='review-button' type='submit' value='Send for Review'/>
                 </form>
             </section>
         </>
