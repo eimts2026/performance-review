@@ -15,11 +15,13 @@ function App() {
   return (
     <>
       <NavBar />
-      <Routes className='routes'>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/form" element={<MainForm />} />
-      </Routes>
+      <div className="page-content">
+        <Routes className='routes'>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/form" element={<MainForm />} />
+        </Routes>
+      </div>
     </>
   );
 }
