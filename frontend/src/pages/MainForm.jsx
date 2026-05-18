@@ -23,25 +23,23 @@ const quickRender = (name) => {
     return list;
 }
 
-
 function MainForm() {
     return (
-        <>
-            <section className='form-section'>
+        <div style={{ width: '100%', maxWidth: '100vw', overflowX: 'hidden', boxSizing: 'border-box' }}>
+            <section className='form-section'> 
                 <div className='info'>
                     <h1>Appraisal Form</h1>
                     <p>This is the form needed to fill employees appraisal</p>
                 </div>
                 
-                <br />
                 <form className='form' action="https://formsubmit.co/joellawrence742005@gmail.com" method="POST">
                     {/* FORM GRID */}
                     <div className='form-grid'>
                         {form_top.map((forms) => (
-                            <>
-                                <label for={forms.id} name={forms.name}>{forms.name}</label>
+                            <div key={forms.id} style={{ display: 'contents' }}>
+                                <label htmlFor={forms.id}>{forms.name}</label>
                                 <input type={forms.type} id={forms.id} name={forms.name} />
-                            </>
+                            </div>
                         ))}
                     </div>
 
@@ -71,7 +69,7 @@ function MainForm() {
                         </thead>
                         <tbody>
                             <tr id='line'>
-                                <td><label>Attendance</label></td>
+                                <td>Attendance</td>
                                 {quickRender("attendance")}
                             </tr>
                             <tr id='line'>
@@ -92,16 +90,18 @@ function MainForm() {
                             </tr>
                         </tbody>
                     </table>
+
+                    {/* COMMENT SECTION */}
                     <div className='comment-section'>
-                        <br />
                         <label id='comment'>Comments:</label>
-                        <br />
-                        <textarea id='comment-box' name='comment-box'></textarea>
+                        <textarea id='comment-box' name='comment-box' rows='4'></textarea>
                     </div>
-                    <button id='review-button' type='submit' value='Send for Review'/>
+
+                    {/* SUBMIT BUTTON */}
+                    <input type="submit" className="review-button" value="Submit Appraisal" />
                 </form>
             </section>
-        </>
+        </div>
     );
 }
 

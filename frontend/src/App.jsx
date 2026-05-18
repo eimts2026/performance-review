@@ -15,7 +15,7 @@ function App() {
   return (
     <>
       <NavBar />
-      <Routes>
+      <Routes className='routes'>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/form" element={<MainForm />} />

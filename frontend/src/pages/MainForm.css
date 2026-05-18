@@ -1,91 +1,257 @@
-.form-section p, .form-section ul li {
-    font-size: var(--p-font-size);
-    color: black;
+.form-section {
+    width: 100dvw;
+    max-width: 100vw; 
+    box-sizing: border-box;
+    overflow-x: hidden;
+    padding: 3rem 1.5rem;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-/* Index design */
-.index #list {
-    display: inline-block;
-    text-align: left;
+.form-section .info {
+    text-align: center;
+    margin-bottom: 3rem;
 }
 
-
-/* List Design */
-.form-section .form ul li {
-    list-style-type: none;
+.form-section h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #1a1a1a;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.5px;
 }
 
-.form-section .form .index h3 {
-    font-weight: bold;
-    color: black;
+.form-section p {
+    font-size: 1rem;
+    color: #666;
 }
 
-/* From Grid Design */
+.form-section .form {
+    background: #ffffff;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Form Grid Design */
 .form-grid {
     display: grid;
-    width: 70%;
-    justify-content: center;
-    justify-self: center;
     grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    align-items: center;
+    margin-bottom: 3rem;
+    box-sizing: border-box;
 }
 
 .form-grid label {
-    color: black;
-    justify-self: left;
-    margin-bottom: 20px;
-    padding-left: 40px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #333;
+    grid-column: span 1;
 }
 
 .form-grid input {
-    margin-bottom: 20px;
-    border-radius: 20px;
-    opacity: 70%;
-    padding-left: 20px;
-    padding-right: 20px;
+    grid-column: span 1;
+    height: 42px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: #fafafa;
+    padding: 0 1rem;
+    font-size: 0.9rem;
+    color: #333;
+    transition: all 0.2s ease;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-/* HR TABLE DESIGN */
+.form-grid input:focus {
+    outline: none;
+    border-color: #1a1a1a;
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Index Design */
+.index {
+    background: #f8f9fa;
+    padding: 1.25rem 2rem;
+    border-radius: 12px;
+    margin-bottom: 2.5rem;
+    border: 1px solid #eee;
+}
+
+.form-section .form .index h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 0.75rem 0;
+}
+
+.index #list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    padding: 0;
+    margin: 0;
+}
+
+.form-section .form ul li {
+    list-style-type: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #555;
+    background: #fff;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+}
+
+/* HR Table Design */
 .hr-table {
-    color: black;
-    justify-self: center;
+    width: 100%;
+    max-width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 0 auto 2.5rem auto;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
 }
 
-.hr-table #line-1, .hr-table #line {
+.hr-table #line-1 {
+    background-color: #f1f5f9;
+}
+
+.hr-table #line-1 th {
+    color: #1e293b;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 1rem;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.hr-table #monitored {
+    text-align: left;
+    width: 50%;
+}
+
+.hr-table #line-1 th:not(#monitored) {
+    text-align: center;
+    width: 10%;
+}
+
+.hr-table #line td {
+    padding: 1.2rem 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    color: #334155;
+    font-size: 0.95rem;
+}
+
+.hr-table #line td:first-child {
+    font-weight: 500;
     text-align: left;
 }
 
-.hr-table #line-1 th, .hr-table #line td {
-    border: 1px solid black;
-    padding: 10px;
+.hr-table #line td:not(:first-child) {
+    text-align: center;
 }
 
+/* Custom Styled Radio Elements */
 .hr-table #line #option {
     box-sizing: border-box;
     appearance: none;
-    background: white;
-    border: 3px solid white;
-    width: 13px;
-    height: 13px;
+    -webkit-appearance: none;
+    background: #fff;
+    border: 2px solid #cbd5e1;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    cursor: pointer;
+    margin: 0 auto;
+    display: block;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.hr-table #line #option:hover {
+    border-color: #64748b;
 }
 
 .hr-table #line #option:checked {
-    background: #333;
+    border-color: #1e293b;
+    background: #1e293b;
+}
+
+.hr-table #line #option:checked::after {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 6px;
+    height: 6px;
+    background: #fff;
+    border-radius: 50%;
 }
 
 /* Comment Section */
+.comment-section {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 2.5rem;
+}
+
 .comment-section #comment {
-    color: black;
-    display: block;
+    color: #1a1a1a;
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
     text-align: left;
-    margin-left: 17%;
 }
 
 .comment-section #comment-box {
-    width: 65%;
-    height: 200px;
+    width: 100%;
+    height: 150px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: #fafafa;
+    padding: 1rem;
+    font-size: 0.95rem;
+    color: #333;
+    font-family: inherit;
+    resize: vertical;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
 }
 
-/* Submit Button */
-.form .review-button {
-    color: black;
+.comment-section #comment-box:focus {
+    outline: none;
+    border-color: #1a1a1a;
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Submit Button Layout */
+.form-section .form button, 
+.form-section .form input[type="submit"] {
+    display: block;
+    width: 200px;
+    height: 48px;
+    margin: 0 auto;
+    background: #1a1a1a;
+    color: #ffffff !important;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.form-section .form button:hover,
+.form-section .form input[type="submit"]:hover {
+    background: #333333;
 }
