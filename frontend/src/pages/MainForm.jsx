@@ -1,4 +1,5 @@
 import './MainForm.css'
+import { initializeApp } from "firebase/app";
 import OptionRender from '../components/OptionRender';
 
 const form_top = [
