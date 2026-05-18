@@ -3,8 +3,8 @@ import './SignIn.css'
 function SignIn() {
     return (
         <> 
-            <section class='signin-section'>
-                <div class='container'>
+            <section className='signin-section'>
+                <div className='container'>
                     
                 </div>
             </section>

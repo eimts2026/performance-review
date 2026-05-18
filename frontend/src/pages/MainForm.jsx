@@ -27,16 +27,16 @@ const quickRender = (name) => {
 function MainForm() {
     return (
         <>
-            <section class='form-section'>
-                <div class='info'>
+            <section className='form-section'>
+                <div className='info'>
                     <h1>Appraisal Form</h1>
                     <p>This is the form needed to fill employees appraisal</p>
                 </div>
                 
                 <br />
-                <form class='form' action="https://formsubmit.co/joellawrence742005@gmail.com" method="POST">
+                <form className='form' action="https://formsubmit.co/joellawrence742005@gmail.com" method="POST">
                     {/* FORM GRID */}
-                    <div class='form-grid'>
+                    <div className='form-grid'>
                         {form_top.map((forms) => (
                             <>
                                 <label for={forms.id} name={forms.name}>{forms.name}</label>
@@ -46,7 +46,7 @@ function MainForm() {
                     </div>
 
                     {/* INDEX */}
-                    <div class='index'>
+                    <div className='index'>
                         <h3>Index</h3>
                         <ul id='list'>
                             <li>A = Excellent</li>
@@ -58,7 +58,7 @@ function MainForm() {
                     </div>
 
                     {/* HR MONITORING GRID */}
-                    <table class='hr-table'>
+                    <table className='hr-table'>
                         <thead>
                             <tr id='line-1'>
                                 <th id='monitored'>Monitored by HR Department</th>
@@ -92,7 +92,7 @@ function MainForm() {
                             </tr>
                         </tbody>
                     </table>
-                    <div class='comment-section'>
+                    <div className='comment-section'>
                         <br />
                         <label id='comment'>Comments:</label>
                         <br />

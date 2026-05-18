@@ -8,13 +8,13 @@ const uses = [
 function Home() {
     return (
         <>
-            <section class="home-section">
-                <div class="info">
+            <section className="home-section">
+                <div className="info">
                     <h1>Home</h1>
                     <p>Check latest performance reviews and appraisal forms ongoing</p>
                 </div>
             
-                <div class="container">
+                <div className="container">
                     {uses.map((use) => (
                         <a href={use.link}><div id={use.id}>{use.name}</div></a>
                     ))}

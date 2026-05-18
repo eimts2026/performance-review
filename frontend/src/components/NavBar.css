@@ -101,3 +101,9 @@
 .navbar-right .user-icon:hover {
     transform: scale(1.1);
 }
+
+/* hide scroll */
+.navbar {
+    overflow: hidden;
+    overflow-x: hidden;
+}
