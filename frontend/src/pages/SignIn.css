@@ -1,4 +1,23 @@
-.signin-section .container p {
-    font-size: var(--p-font-size);
+.box {
+    width: 320px;
+    height: 150px;
+    padding: 10px;
+    border: 5px solid gray;
+    margin: 0px;
+    margin-top: 100px;
+    align-self: center;
+}
+
+.form-section {
     color: black;
 }
+
+.submit-button {
+    width: 150px;
+    height: 20px;
+    margin-top: 10px;
+    padding: 10px;
+    text-align: center;
+    font-family: poppins;
+}
+
