@@ -28,8 +28,10 @@ jobs:
     - name: 📂 Deply via SFTP to Hostinger
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
-        server: 217.21.83.210
+        server: 217.21.83.210 # 👈 Keep your Hostinger FTP Host here
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
         port: 22
         local_path: ./frontend/dist/*
-        remote_path: /home/${{ secrets.FTP_USERNAME }}/public_html/reviews/
+        remote_path: /home/{username}/public_html/reviews/
         sftpArgs: '-o ConnectTimeout=5'
