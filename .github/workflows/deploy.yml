@@ -22,7 +22,7 @@ jobs:
     - name: 🔨 Install dependencies and Build
       working-directory: ./frontend
       run: |
-        npm ci
+        npm i
         npm run build
 
     - name: 📂 Sync Dist Folder to Hostinger Subdomain
