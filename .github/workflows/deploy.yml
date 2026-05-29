@@ -20,6 +20,7 @@ jobs:
         node-version: '24' # 👈 Changed from 20 to 24
 
     - name: 🔨 Install dependencies and Build
+      working-directory: ./frontend
       run: |
         npm ci
         npm run build
