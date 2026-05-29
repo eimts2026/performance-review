@@ -10,6 +10,6 @@ export default defineConfig({
   ],
   base: './',
   build: {
-    outDir: 'aseets',
+    outDir: 'assets',
   }
 })
