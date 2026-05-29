@@ -23,8 +23,8 @@ jobs:
       run: |
         cd frontend
         npm install
-        npm install 
         npm run build
+        ls- la
 
     - name: 📂 Sync Dist Folder to Hostinger Subdomain
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
