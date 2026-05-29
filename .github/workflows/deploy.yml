@@ -26,7 +26,7 @@ jobs:
         npm run build
 
     - name: 📂 Deply via SFTP to Hostinger
-      uses: wlixcc/SFTP-Deploy-Action@1.2.4
+      uses: wlixcc/SFTP-Deploy-Action@latest
       with:
         server: 217.21.83.210
         port: 22
