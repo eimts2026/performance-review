@@ -33,3 +33,4 @@ jobs:
         password: ${{ secrets.FTP_PASSWORD }}
         local-dir: ./frontend/dist/   # 👈 Change to ./build/ if using Create React App instead of Vite
         server-dir: ./public_html/reviews/ # 👈 Keep your subdomain path here
+        dangerous-clean-state: true
