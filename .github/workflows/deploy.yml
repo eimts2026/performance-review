@@ -1,0 +1,34 @@
+name: 🚀 Build and Deploy React to Hostinger
+
+on:
+  push:
+    branches:
+      - main  # Triggers the automation every time you push to the 'main' branch
+
+jobs:
+  web-deploy:
+    name: 🎉 Compile and Upload
+    runs-on: ubuntu-latest
+    steps:
+    
+    - name: 🚚 Get latest code
+      uses: actions/checkout@v4
+
+    - name: 🟢 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20' # Uses a modern, stable Node environment
+
+    - name: 🔨 Install dependencies and Build
+      run: |
+        npm ci
+        npm run build
+
+    - name: 📂 Sync Dist Folder to Hostinger Subdomain
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      with:
+        server: ftp://217.21.83.210 # 👈 REPLACE WITH YOUR HOSTINGER FTP HOST
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        local-dir: ./dist/         # 👈 Change to ./build/ if using Create React App instead of Vite
+        server-dir: ./public_html/reviews/ # 👈 REPLACE WITH YOUR SUBDOMAIN PATH
