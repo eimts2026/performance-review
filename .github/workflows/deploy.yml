@@ -12,12 +12,12 @@ jobs:
     steps:
     
     - name: 🚚 Get latest code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6 # 👈 Updated to v6 to support Node 24 natively
 
     - name: 🟢 Setup Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6 # 👈 Updated to v6 to support Node 24 natively
       with:
-        node-version: '20' # Uses a modern, stable Node environment
+        node-version: '24' # 👈 Changed from 20 to 24
 
     - name: 🔨 Install dependencies and Build
       run: |
@@ -27,8 +27,8 @@ jobs:
     - name: 📂 Sync Dist Folder to Hostinger Subdomain
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
-        server: ftp://217.21.83.210 # 👈 REPLACE WITH YOUR HOSTINGER FTP HOST
+        server: ftp://217.21.83.210 # 👈 Keep your Hostinger FTP Host here
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
         local-dir: ./dist/         # 👈 Change to ./build/ if using Create React App instead of Vite
-        server-dir: ./public_html/reviews/ # 👈 REPLACE WITH YOUR SUBDOMAIN PATH
+        server-dir: ./public_html/reviews/ # 👈 Keep your subdomain path here
