@@ -1,44 +1,56 @@
-import './SignIn.css'
+import './SignIn.css';
+import {useState} from 'react';
 
-function SignUp() {
+// function SignUp() {
+//     return (
+//         <>
+//             <h1>Welcome to the Portal Sign in</h1>
+            
+//             <form className='form-section' action='../services/user.services.js' method='post' autoComplete='on'>
+//                 <div>
+//                     <label for='email'>Email Address: </label>
+//                     <input
+//                         type='email'
+//                         id='email'
+//                         name='email'
+//                         required
+//                         placeholder='johndoe@gmail.com'
+//                         autoComplete='username'
+//                     />    
+//                 </div>
+
+//                 <div>
+//                     <label for='password'>Password: </label>
+//                     <input
+//                         type='password'
+//                         id='password'
+//                         name='password'
+//                         required
+//                         autoComplete='current-password'
+//                     />
+//                 </div>
+
+//                 <div>
+//                     <input type='checkbox' id='remember-me' name='remember' />
+//                     <label for='remember-me'>Remember me for 30 days</label>
+//                 </div>
+
+//                 <button type='submit'>Sign In</button>
+//             </form>
+            
+//         </>
+//     );
+// }
+
+// export default SignUp;
+
+function SignIn() {
     return (
-        <>
-            <h1>Welcome to the Portal Sign in</h1>
-            
-            <form className='form-section' action='../services/user.services.js' method='post' autoComplete='on'>
-                <div>
-                    <label for='email'>Email Address: </label>
-                    <input
-                        type='email'
-                        id='email'
-                        name='email'
-                        required
-                        placeholder='johndoe@gmail.com'
-                        autoComplete='username'
-                    />    
-                </div>
-
-                <div>
-                    <label for='password'>Password: </label>
-                    <input
-                        type='password'
-                        id='password'
-                        name='password'
-                        required
-                        autoComplete='current-password'
-                    />
-                </div>
-
-                <div>
-                    <input type='checkbox' id='remember-me' name='remember' />
-                    <label for='remember-me'>Remember me for 30 days</label>
-                </div>
-
-                <button type='submit'>Sign In</button>
-            </form>
-            
-        </>
+        <form>
+            <label>Username: </label>
+            <input type='email' id='user-email' name='user-email' required />
+        </form>
     );
 }
 
-export default SignUp;
+export default SignIn;

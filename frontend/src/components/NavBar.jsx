@@ -26,10 +26,7 @@ function NavBar() {
                 </div>
                 {/* navbar right */}
                 <div className="navbar-right">
-                    <a href="/contact" className="contact">Contact Us</a>
-                    <a href="/account" className="user-icon">
-                        <i className="fas fa-user"></i>
-                    </a>
+                    <a href="/addUser" className="contact">Add User</a>
                 </div>
             </nav>
         </>

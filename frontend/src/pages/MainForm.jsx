@@ -1,6 +1,8 @@
 import './MainForm.css'
+import { useRef } from "react"
 import { initializeApp } from "firebase/app";
 import OptionRender from '../components/OptionRender';
+import emailjs from '@emailjs/browser'
 
 const form_top = [
     {id: "ap-name", name: "Appraiser Name:", type: "text"},
@@ -25,6 +27,26 @@ const quickRender = (name) => {
 }
 
 function MainForm() {
+
+    // Initialising the email connection
+    const form = useRef();
+
+    const sendEmail = (e) => {
+        e.preventDefault();
+
+        emailjs.sendForm(
+            process.env.VITE_EMAILJS_SERVICEID,
+            prcess.env.VITE_EMAILJS_TEMPLATEID,
+            form.current,
+            process.env.VITE_EMAILJS_PUBLICKEY
+        )
+        .then((result) => {
+            console.log('Email successfully sent!', result.text)
+        }, (error) => {
+            console.log('Failed to send email', error.text)
+        })
+    }
+
     return (
         <div style={{ width: '100%', maxWidth: '100vw', overflowX: 'hidden', boxSizing: 'border-box' }}>
             <section className='form-section'> 
@@ -33,7 +55,7 @@ function MainForm() {
                     <p>This is the form needed to fill employees appraisal</p>
                 </div>
                 
-                <form className='form' action="https://formsubmit.co/joellawrence742005@gmail.com" method="POST">
+                <form className='form' ref={form} onSubmit={sendEmail}>
                     {/* FORM GRID */}
                     <div className='form-grid'>
                         {form_top.map((forms) => (
