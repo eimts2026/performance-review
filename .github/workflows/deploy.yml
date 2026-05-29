@@ -32,5 +32,5 @@ jobs:
         server: 217.21.83.210 # 👈 Keep your Hostinger FTP Host here
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
-        local-dir: ./frontend/assets/   # 👈 Change to ./build/ if using Create React App instead of Vite
+        local-dir: ./frontend/dist/   # 👈 Change to ./build/ if using Create React App instead of Vite
         server-dir: ./public_html/reviews/ # 👈 Keep your subdomain path here
