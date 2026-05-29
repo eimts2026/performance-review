@@ -28,7 +28,7 @@ jobs:
     - name: 📂 Sync Dist Folder to Hostinger Subdomain
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
-        server: ftp://217.21.83.210 # 👈 Keep your Hostinger FTP Host here
+        server: 217.21.83.210 # 👈 Keep your Hostinger FTP Host here
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
         local-dir: ./frontend/dist/   # 👈 Change to ./build/ if using Create React App instead of Vite
