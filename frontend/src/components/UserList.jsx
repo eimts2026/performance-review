@@ -17,18 +17,20 @@ export default function UserList() {
     const [editingName, setEditingName] = useState('')
 
     // Reading the database
-    const collectionRef = collection(db, 'Users');
-    const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
-        const dataArray = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        }))
-        setUsers(dataArray)
+   const createUser = async (newName, newAge) => {
+    await addDoc(usersCollectionRef, {
+        name: newAge,
+        age: Number(newAge)
     })
+   }
 
-    return () => unsubscribe();
+   useEffect(() => {
+    const getUsers = async () => {
+        const data = await getDocs(usersCollectionRef)
+    }
 
-
+    setNewUser(data.docs.map((doc) =>))
+   })
 
 
 }
