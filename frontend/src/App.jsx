@@ -6,6 +6,7 @@ import Home from './pages/Home'
 import MainForm from './pages/MainForm'
 import About from './pages/About'
 import SignUp from './pages/SignIn'
+import AddUser from './pages/AddUser'
 
 // NavBar
 import NavBar from './components/NavBar'
@@ -26,6 +27,7 @@ function App () {
         <Route path="/form" element={<MainForm />} />
         <Route path="/about" element={<About />} />
         <Route path="/signin" element={<SignUp />} />
+        <Route path="/addUser" element={<AddUser />} />
       </Routes>
     </>
   );
