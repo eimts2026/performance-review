@@ -25,12 +25,11 @@ jobs:
         npm install
         npm run build
 
-    - name: 📂 Sync Dist Folder to Hostinger Subdomain
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+    - name: 📂 Deply via SFTP to Hostinger
+      uses: wlixcc/SFTP-Deploy-Action@1.2.4
       with:
-        server: 217.21.83.210 # 👈 Keep your Hostinger FTP Host here
-        username: ${{ secrets.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        local-dir: ./frontend/dist/   # 👈 Change to ./build/ if using Create React App instead of Vite
-        server-dir: ./public_html/reviews/ # 👈 Keep your subdomain path here
-        dangerous-clean-state: true
+        server: 217.21.83.210
+        port: 22
+        local_path: ./frontend/dist/*
+        remote_path: /home/${{ secrets.FTP_USERNAME }}/public_html/reviews/
+        sftpArgs: '-o ConnectTimeout=5'
