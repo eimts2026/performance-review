@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "build": "cd frontend && npm run build"
+  },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
     "firebase": "^12.13.0"
