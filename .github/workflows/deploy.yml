@@ -39,7 +39,7 @@ jobs:
               uses: actions/upload-pages-artifact@v3
               with:
                   # This tells GitHub to grab the built files from your root dist folder
-                  path: "./dist"
+                  path: "./frontend/dist"
 
             - name: Deploy to GitHub Pages
               id: deployment
