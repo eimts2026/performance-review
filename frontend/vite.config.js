@@ -9,4 +9,7 @@ export default defineConfig({
     tailwindcss(),
   ],
   base: './',
+  build: {
+    outDir: 'dist' // 👈 Forces Vite to output exactly to frontend/dist
+  },
 })
