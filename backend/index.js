@@ -6,7 +6,7 @@ dotenv.config()
 // this is used to load the express web thingy
 const app = express({ path: '../.env' })
 
-app/use(express.json())
+app.use(express.json())
 
 // initialisation 
 const db = mysql.createConnection({
