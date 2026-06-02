@@ -173,13 +173,21 @@ function MainForm() {
         }
     }
 
-    const sendEmail = (e) => {
-        e.preventDefault();
+    const sendEmail = () => {
+        const templateParams = {
+            appraiser_name: appraisal.appraiser_name,
+            employee_name: appraisal.employee_name,
+            employee_id: appraisal.employee_id,
+            manager: appraisal.manager,
+            manager_email: appraisal.manager_email,
+            reviewed_date: appraisal.reviewed_date,
+            comments: appraisal.comments
+        };
 
-        emailjs.sendForm(
-            import.meta.env.VITE_EMAILJS_SERVICEID,
+        emailjs.send(
+            import.meta.env.VITE_EMAILJS_SERVICEKEY,
             import.meta.env.VITE_EMAILJS_TEMPLATEID,
-            form.current,
+            templateParams,
             import.meta.env.VITE_EMAILJS_PUBLICKEY
         )
         .then((result) => {
@@ -194,7 +202,7 @@ function MainForm() {
         e.preventDefault();
         const dbSaved = await saveToDatabase();
         if(dbSaved) {
-            sendEmail(e);
+            sendEmail();
         }
     }
 

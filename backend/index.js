@@ -121,6 +121,57 @@ app.post("/appraisals", (req, res) => {
     })
 })
 
+// Adding probation data to database
+app.post("/probation", (req, res) => {
+    const {
+        employee_id,
+        name,
+        department,
+        role,
+        date_of_joining,
+        date_of_review,
+        department_head,
+        functional_technical_skills,
+        result_orientation,
+        creativity_innovation,
+        communication,
+        teamwork,
+        adaptability,
+        supervisory_managerial,
+        appraisers_comments
+    } = req.body;
+
+    const finalDateOfReview = date_of_review || new Date().toISOString().slice(0, 10);
+
+    const q = "INSERT INTO probation (`employee_id`, `name`, `department`, `role`, `date_of_joining`, `date_of_review`, `department_head`, `functional_technical_skills`, `result_orientation`, `creativity_innovation`, `communication`, `teamwork`, `adaptability`, `supervisory_managerial`, `appraisers_comments`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    const values = [
+        employee_id,
+        name,
+        department,
+        role,
+        date_of_joining,
+        finalDateOfReview,
+        department_head,
+        functional_technical_skills,
+        result_orientation,
+        creativity_innovation,
+        communication,
+        teamwork,
+        adaptability,
+        supervisory_managerial,
+        appraisers_comments
+    ];
+
+    db.query(q, values, (err, data) => {
+        if(err) {
+            console.error("Error inserting probation record:", err);
+            return res.status(500).json(err);
+        }
+        return res.json("probation record created successfully")
+    })
+})
+
 // this is to test whether the connection works and thec code works
 app.listen(8800, () => {
     console.log("Connected to backend!")

@@ -4,7 +4,7 @@ import './Home.css'
 
 const uses = [
     {id: 1, name: 'Apply Appraisal', link: '/form'},
-    {id: 2, name: 'Apply Probation', link: '/home'},
+    {id: 2, name: 'Apply Probation', link: '/probation'},
 ]
 
 function Home() {

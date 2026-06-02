@@ -1,0 +1,11 @@
+/* Dedicated styling for ProbationForm, matching MainForm aesthetics */
+@import './MainForm.css';
+
+.probation-info-header {
+    background-color: #f0fdf4;
+    border-color: #22c55e;
+}
+
+.probation-table th {
+    background-color: #f1f5f9;
+}

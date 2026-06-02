@@ -8,6 +8,7 @@ import About from './pages/About'
 import SignUp from './pages/SignIn'
 import AddEmployee from './pages/AddEmployee'
 import Login from './pages/Login'
+import ProbationForm from './pages/ProbationForm'
 
 // NavBar
 import NavBar from './components/NavBar'
@@ -30,6 +31,7 @@ function App () {
         <Route path="/signin" element={<SignUp />} />
         <Route path="/addEmployee" element={<AddEmployee />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/probation" element={<ProbationForm />} />
       </Routes>
     </>
   );
