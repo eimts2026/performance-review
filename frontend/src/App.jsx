@@ -6,8 +6,8 @@ import Home from './pages/Home'
 import MainForm from './pages/MainForm'
 import About from './pages/About'
 import SignUp from './pages/SignIn'
-import AddUser from './pages/AddUser'
 import AddEmployee from './pages/AddEmployee'
+import Login from './pages/Login'
 
 // NavBar
 import NavBar from './components/NavBar'
@@ -17,7 +17,7 @@ function App () {
   const location = useLocation();
 
   // Hides the navbar for signin and 404 pages
-  const hideNavbar = ["/signin", "/404"];
+  const hideNavbar = ["/signin", "/404", "/login"];
   const shouldHideNavbar = hideNavbar.includes(location.pathname)
 
   return (
@@ -28,8 +28,8 @@ function App () {
         <Route path="/form" element={<MainForm />} />
         <Route path="/about" element={<About />} />
         <Route path="/signin" element={<SignUp />} />
-        <Route path="/addUser" element={<AddUser />} />
         <Route path="/addEmployee" element={<AddEmployee />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </>
   );

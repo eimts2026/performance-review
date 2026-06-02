@@ -1,8 +1,8 @@
-import './SignIn.css';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import './Login.css'
 
-function SignIn() {
+function Login() {
     const [credentials, setCredentials] = useState({
         first_name: "",
         password: ""
@@ -51,10 +51,10 @@ function SignIn() {
     }
 
     return (
-        <div className='signin-container'>
-            <div className='signin-box'>
-                <div className='signin-header'>
-                    <h1>Sign In</h1>
+        <div className='login-container'>
+            <div className='login-box'>
+                <div className='login-header'>
+                    <h1>Login</h1>
                     <p>Welcome to Performance Review System</p>
                 </div>
 
@@ -87,12 +87,12 @@ function SignIn() {
                         />
                     </div>
 
-                    <button type="submit" className='signin-button' disabled={loading}>
-                        {loading ? "Signing in..." : "Sign In"}
+                    <button type="submit" className='login-button' disabled={loading}>
+                        {loading ? "Logging in..." : "Login"}
                     </button>
                 </form>
 
-                <div className='signin-footer'>
+                <div className='login-footer'>
                     <p>Test User: <strong>Joel</strong> / Password: <strong>1234</strong></p>
                 </div>
             </div>
@@ -100,4 +100,4 @@ function SignIn() {
     );
 }
 
-export default SignIn;
+export default Login;

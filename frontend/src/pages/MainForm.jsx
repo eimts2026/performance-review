@@ -1,5 +1,6 @@
 import './MainForm.css'
 import { useRef, useState, useEffect } from "react"
+import { useNavigate } from 'react-router-dom'
 import { initializeApp } from "firebase/app";
 import OptionRender from '../components/OptionRender';
 import emailjs from '@emailjs/browser'
@@ -25,6 +26,11 @@ function MainForm() {
 
     // Initialising the email connection
     const form = useRef();
+    const navigate = useNavigate()
+
+    // Check if user is logged in and is HR
+    const [user, setUser] = useState(null)
+    const [isHR, setIsHR] = useState(false)
 
     // State for employees list
     const [employees, setEmployees] = useState([])
@@ -32,7 +38,7 @@ function MainForm() {
     const [loadingEmployees, setLoadingEmployees] = useState(true)
 
     // JS to add to DB
-    const [user, setUser] = useState({
+    const [appraisal, setAppraisal] = useState({
         employee_id: "",
         appraiser_name: "",
         employee_name: "",
@@ -48,10 +54,34 @@ function MainForm() {
         engagement_rating: "",
         qualification_rating: "",
         comments: "",
+        // HR only fields
+        job_knowledge_rating: "",
+        achieved_kpis_rating: "",
+        work_quality_rating: "",
+        initiative_rating: "",
+        time_management_rating: "",
+        accurate_records_rating: "",
+        team_work_rating: "",
+        organizing_planning_rating: "",
+        work_attitude_rating: "",
+        kpis_for_this_year: "",
+        employee_comments_problems: "",
     })
 
-    // Fetch employees on component mount
+    // Fetch employees and managers on component mount
     useEffect(() => {
+        // Check if user is logged in
+        const storedUser = localStorage.getItem('user')
+        if(!storedUser) {
+            navigate('/login')
+            return
+        }
+        
+        const userData = JSON.parse(storedUser)
+        setUser(userData)
+        setIsHR(userData.role === 'HR')
+        
+        fetchEmployees();
         fetchManagers();
     }, [])
 
@@ -76,12 +106,6 @@ function MainForm() {
             console.log("Error fetching managers:", error);
         }
     }
-
-    // Handle input changes for form fields
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setUser(prev => ({
-            ...prev,
             [name]: value
         }))
     }
@@ -92,7 +116,7 @@ function MainForm() {
         const selectedEmployee = employees.find(emp => emp.employee_id == employeeId);
         
         if(selectedEmployee) {
-            setUser(prev => ({
+            setAppraisal(prev => ({
                 ...prev,
                 employee_id: selectedEmployee.employee_id,
                 employee_name: selectedEmployee.first_name + " " + selectedEmployee.last_name,
@@ -105,10 +129,10 @@ function MainForm() {
     // Handle manager selection
     const handleManagerChange = (e) => {
         const managerId = e.target.value;
-        const selectedManager = managers.find(mgr => mgr.manager_id == managerId);
+        const selectedManager = managers.find(mgr => mgr.employee_id == managerId);
         
         if(selectedManager) {
-            setUser(prev => ({
+            setAppraisal(prev => ({
                 ...prev,
                 manager: selectedManager.first_name + " " + selectedManager.last_name,
                 manager_email: selectedManager.email
@@ -119,7 +143,7 @@ function MainForm() {
     // Handle rating changes
     const handleRatingChange = (e, ratingField) => {
         const value = e.target.value;
-        setUser(prev => ({
+        setAppraisal(prev => ({
             ...prev,
             [ratingField]: value
         }))
@@ -133,7 +157,7 @@ function MainForm() {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(user)
+                body: JSON.stringify(appraisal)
             })
             const data = await response.json();
             console.log("Data saved to database:", data);
@@ -183,13 +207,13 @@ function MainForm() {
                         {form_top.map((forms) => (
                             <div key={forms.id} style={{ display: 'contents' }}>
                                 <label htmlFor={forms.id}>{forms.Text}</label>
-                                <input type={forms.type} id={forms.id} name={forms.name} value={user[forms.name]} onChange={handleInputChange} />
+                                <input type={forms.type} id={forms.id} name={forms.name} value={appraisal[forms.name]} onChange={handleInputChange} />
                             </div>
                         ))}
                         
                         {/* Employee Dropdown */}
                         <label htmlFor="employee-select">Select Employee:</label>
-                        <select id="employee-select" value={user.employee_id} onChange={handleEmployeeChange}>
+                        <select id="employee-select" value={appraisal.employee_id} onChange={handleEmployeeChange}>
                             <option value="">-- Select an Employee --</option>
                             {employees.map((emp) => (
                                 <option key={emp.employee_id} value={emp.employee_id}>
@@ -200,10 +224,10 @@ function MainForm() {
 
                         {/* Manager Dropdown */}
                         <label htmlFor="mgr">Manager:</label>
-                        <select id="mgr" value={user.manager_email} onChange={handleManagerChange}>
+                        <select id="mgr" value={appraisal.manager_email} onChange={handleManagerChange}>
                             <option value="">Select a Manager</option>
                             {managers.map((mgr) => (
-                                <option key={mgr.manager_id} value={mgr.manager_id}>
+                                <option key={mgr.employee_id} value={mgr.employee_id}>
                                     {mgr.first_name} {mgr.last_name}
                                 </option>
                             ))}
@@ -211,25 +235,25 @@ function MainForm() {
                     </div>
 
                     {/* Display Selected Employee Info */}
-                    {user.employee_id && (
+                    {appraisal.employee_id && (
                         <div className='employee-info'>
                             <h3>Selected Employee Information</h3>
                             <div className='info-grid'>
                                 <div className='info-item'>
                                     <label>Employee ID:</label>
-                                    <span>{user.employee_id}</span>
+                                    <span>{appraisal.employee_id}</span>
                                 </div>
                                 <div className='info-item'>
                                     <label>Name:</label>
-                                    <span>{user.employee_name}</span>
+                                    <span>{appraisal.employee_name}</span>
                                 </div>
                                 <div className='info-item'>
                                     <label>Position:</label>
-                                    <span>{user.position}</span>
+                                    <span>{appraisal.position}</span>
                                 </div>
                                 <div className='info-item'>
                                     <label>Date Joined:</label>
-                                    <span>{user.date_joined}</span>
+                                    <span>{appraisal.date_joined}</span>
                                 </div>
                             </div>
                         </div>
@@ -262,31 +286,114 @@ function MainForm() {
                         <tbody>
                             <tr id='line'>
                                 <td>Attendance</td>
-                                {quickRender("attendance_rating", user.attendance_rating, (e) => handleRatingChange(e, "attendance_rating"))}
+                                {quickRender("attendance_rating", appraisal.attendance_rating, (e) => handleRatingChange(e, "attendance_rating"))}
                             </tr>
                             <tr id='line'>
                                 <td>Punctuality</td>
-                                {quickRender("punctuality_rating", user.punctuality_rating, (e) => handleRatingChange(e, "punctuality_rating"))}
+                                {quickRender("punctuality_rating", appraisal.punctuality_rating, (e) => handleRatingChange(e, "punctuality_rating"))}
                             </tr>
                             <tr id='line'>
                                 <td>Adhere Management decisions, Company Rules & Regulation</td>
-                                {quickRender("compliance_rating", user.compliance_rating, (e) => handleRatingChange(e, "compliance_rating"))}
+                                {quickRender("compliance_rating", appraisal.compliance_rating, (e) => handleRatingChange(e, "compliance_rating"))}
                             </tr>
                             <tr id='line'>
                                 <td>Employee Engagement</td>
-                                {quickRender("engagement_rating", user.engagement_rating, (e) => handleRatingChange(e, "engagement_rating"))}
+                                {quickRender("engagement_rating", appraisal.engagement_rating, (e) => handleRatingChange(e, "engagement_rating"))}
                             </tr>
                             <tr id='line'>
                                 <td>Professional Qualification</td>
-                                {quickRender("qualification_rating", user.qualification_rating, (e) => handleRatingChange(e, "qualification_rating"))}
+                                {quickRender("qualification_rating", appraisal.qualification_rating, (e) => handleRatingChange(e, "qualification_rating"))}
                             </tr>
                         </tbody>
                     </table>
 
+                    {/* HR Only Performance Metrics Section */}
+                    {isHR && (
+                        <>
+                            <div className='hr-section'>
+                                <h3>Performance Metrics (HR Only)</h3>
+                                <table className='hr-table'>
+                                    <thead>
+                                        <tr id='line-1'>
+                                            <th id='monitored'>Performance Criteria</th>
+                                            <th>A</th>
+                                            <th>B</th>
+                                            <th>C</th>
+                                            <th>D</th>
+                                            <th>E</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr id='line'>
+                                            <td>Job Knowledge</td>
+                                            {quickRender("job_knowledge_rating", appraisal.job_knowledge_rating, (e) => handleRatingChange(e, "job_knowledge_rating"))}
+                                        </tr>
+                                        <tr id='line'>
+                                            <td>Achieved KPIs</td>
+                                            {quickRender("achieved_kpis_rating", appraisal.achieved_kpis_rating, (e) => handleRatingChange(e, "achieved_kpis_rating"))}
+                                        </tr>
+                                        <tr id='line'>
+                                            <td>Work Quality</td>
+                                            {quickRender("work_quality_rating", appraisal.work_quality_rating, (e) => handleRatingChange(e, "work_quality_rating"))}
+                                        </tr>
+                                        <tr id='line'>
+                                            <td>Initiative</td>
+                                            {quickRender("initiative_rating", appraisal.initiative_rating, (e) => handleRatingChange(e, "initiative_rating"))}
+                                        </tr>
+                                        <tr id='line'>
+                                            <td>Time Management</td>
+                                            {quickRender("time_management_rating", appraisal.time_management_rating, (e) => handleRatingChange(e, "time_management_rating"))}
+                                        </tr>
+                                        <tr id='line'>
+                                            <td>Maintain Accurate & Accountable Records</td>
+                                            {quickRender("accurate_records_rating", appraisal.accurate_records_rating, (e) => handleRatingChange(e, "accurate_records_rating"))}
+                                        </tr>
+                                        <tr id='line'>
+                                            <td>Team Work</td>
+                                            {quickRender("team_work_rating", appraisal.team_work_rating, (e) => handleRatingChange(e, "team_work_rating"))}
+                                        </tr>
+                                        <tr id='line'>
+                                            <td>Organizing & Planning</td>
+                                            {quickRender("organizing_planning_rating", appraisal.organizing_planning_rating, (e) => handleRatingChange(e, "organizing_planning_rating"))}
+                                        </tr>
+                                        <tr id='line'>
+                                            <td>Attitude Towards Work</td>
+                                            {quickRender("work_attitude_rating", appraisal.work_attitude_rating, (e) => handleRatingChange(e, "work_attitude_rating"))}
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <div className='hr-textarea-section'>
+                                    <div className='textarea-group'>
+                                        <label htmlFor="kpis">KPIs for This Year:</label>
+                                        <textarea 
+                                            id="kpis" 
+                                            name="kpis_for_this_year" 
+                                            rows='4'
+                                            value={appraisal.kpis_for_this_year}
+                                            onChange={handleInputChange}
+                                        ></textarea>
+                                    </div>
+
+                                    <div className='textarea-group'>
+                                        <label htmlFor="employee_comments">Employee Comments/Problems:</label>
+                                        <textarea 
+                                            id="employee_comments" 
+                                            name="employee_comments_problems" 
+                                            rows='4'
+                                            value={appraisal.employee_comments_problems}
+                                            onChange={handleInputChange}
+                                        ></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </>
+                    )}
+
                     {/* COMMENT SECTION */}
                     <div className='comment-section'>
                         <label id='comment'>Comments:</label>
-                        <textarea id='comment-box' name='comments' rows='4' value={user.comments} onChange={handleInputChange}></textarea>
+                        <textarea id='comment-box' name='comments' rows='4' value={appraisal.comments} onChange={handleInputChange}></textarea>
                     </div>
 
                     {/* SUBMIT BUTTON */}

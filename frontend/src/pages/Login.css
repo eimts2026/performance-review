@@ -1,4 +1,4 @@
-.signin-container {
+.login-container {
     width: 100%;
     min-height: 100vh;
     display: flex;
@@ -8,7 +8,7 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-.signin-box {
+.login-box {
     background: #ffffff;
     padding: 3rem;
     border-radius: 16px;
@@ -17,19 +17,19 @@
     max-width: 400px;
 }
 
-.signin-header {
+.login-header {
     text-align: center;
     margin-bottom: 2.5rem;
 }
 
-.signin-header h1 {
+.login-header h1 {
     font-size: 2rem;
     font-weight: 800;
     color: #1a1a1a;
     margin: 0 0 0.5rem 0;
 }
 
-.signin-header p {
+.login-header p {
     font-size: 0.95rem;
     color: #666;
     margin: 0;
@@ -82,7 +82,7 @@ form {
     text-align: center;
 }
 
-.signin-button {
+.login-button {
     height: 45px;
     background-color: #50c878;
     color: white;
@@ -95,21 +95,21 @@ form {
     margin-top: 1rem;
 }
 
-.signin-button:hover:not(:disabled) {
+.login-button:hover:not(:disabled) {
     background-color: #3da15f;
     box-shadow: 0 4px 12px rgba(80, 200, 120, 0.3);
 }
 
-.signin-button:active:not(:disabled) {
+.login-button:active:not(:disabled) {
     transform: scale(0.98);
 }
 
-.signin-button:disabled {
+.login-button:disabled {
     opacity: 0.7;
     cursor: not-allowed;
 }
 
-.signin-footer {
+.login-footer {
     text-align: center;
     margin-top: 2rem;
     padding-top: 1.5rem;
@@ -118,23 +118,22 @@ form {
     color: #666;
 }
 
-.signin-footer p {
+.login-footer p {
     margin: 0;
     line-height: 1.6;
 }
 
 @media (max-width: 480px) {
-    .signin-box {
+    .login-box {
         padding: 2rem 1.5rem;
         margin: 1rem;
     }
 
-    .signin-header h1 {
+    .login-header h1 {
         font-size: 1.5rem;
     }
 
-    .signin-header p {
+    .login-header p {
         font-size: 0.85rem;
     }
 }
-

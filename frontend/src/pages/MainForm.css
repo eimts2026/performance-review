@@ -369,3 +369,60 @@
         padding: 0.8rem 0.5rem;
     }
 }
+
+/* HR Section Styling */
+.hr-section {
+    margin-top: 2rem;
+    padding: 2rem;
+    background-color: #f8f9fa;
+    border-left: 4px solid #50c878;
+    border-radius: 8px;
+}
+
+.hr-section h3 {
+    color: #1a1a1a;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+}
+
+.hr-textarea-section {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.textarea-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.textarea-group label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.textarea-group textarea {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 0.75rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+    resize: vertical;
+    background-color: #ffffff;
+}
+
+.textarea-group textarea:focus {
+    outline: none;
+    border-color: #50c878;
+    box-shadow: 0 0 0 3px rgba(80, 200, 120, 0.1);
+}
+
+@media (max-width: 768px) {
+    .hr-textarea-section {
+        grid-template-columns: 1fr;
+    }
+}

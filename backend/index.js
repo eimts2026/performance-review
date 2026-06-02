@@ -34,10 +34,10 @@ app.get("/users", (req, res) => {
 
 // Adding employee or manager to database (both use same employees table)
 app.post("/users", (req, res) => {
-    const { employee_id, first_name, last_name, email, position, date_joined, role } = req.body;
+    const { employee_id, first_name, last_name, email, position, date_joined, role, password } = req.body;
     
-    const q = "INSERT INTO employees (`employee_id`, `first_name`, `last_name`, `email`, `position`, `date_joined`, `role`) VALUES (?, ?, ?, ?, ?, ?, ?)";
-    const values = [employee_id, first_name, last_name, email, position, date_joined, role || 'staff'];
+    const q = "INSERT INTO employees (`employee_id`, `first_name`, `last_name`, `email`, `position`, `date_joined`, `role`, `password`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    const values = [employee_id, first_name, last_name, email, position, date_joined, role || 'staff', password || ''];
 
     db.query(q, values, (err, data) => {
         if(err) return res.json(err)
@@ -45,12 +45,25 @@ app.post("/users", (req, res) => {
     })
 })
 
-// Get all managers (employees with role='manager')
-app.get("/managers", (req, res) => {
-    const q = "SELECT * FROM employees WHERE role = 'manager'"
-    db.query(q, (err, data) => {
+// Login endpoint
+app.post("/login", (req, res) => {
+    const { first_name, password } = req.body;
+    
+    const q = "SELECT * FROM employees WHERE first_name = ? AND password = ?";
+    
+    db.query(q, [first_name, password], (err, data) => {
         if(err) return res.json(err)
-        return res.json(data)
+        if(data.length === 0) return res.status(401).json("Invalid credentials")
+        
+        const user = data[0];
+        return res.json({
+            employee_id: user.employee_id,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            email: user.email,
+            role: user.role,
+            position: user.position
+        })
     })
 })
 
@@ -65,11 +78,11 @@ app.get("/appraisals", (req, res) => {
 
 // Adding appraisal data to database
 app.post("/appraisals", (req, res) => {
-    const { appraiser_name, employee_id, employee_name, position, review_period, date_joined, reviewed_date, manager, manager_email, attendance_rating, punctuality_rating, compliance_rating, engagement_rating, qualification_rating, comments } = req.body;
+    const { appraiser_name, employee_id, employee_name, position, review_period, date_joined, reviewed_date, manager, manager_email, attendance_rating, punctuality_rating, compliance_rating, engagement_rating, qualification_rating, comments, job_knowledge_rating, achieved_kpis_rating, work_quality_rating, initiative_rating, time_management_rating, accurate_records_rating, team_work_rating, organizing_planning_rating, work_attitude_rating, kpis_for_this_year, employee_comments_problems } = req.body;
     
-    const q = "INSERT INTO appraisals (`appraiser_name`, `employee_id`, `employee_name`, `position`, `review_period`, `date_joined`, `reviewed_date`, `manager`, `attendance_rating`, `punctuality_rating`, `compliance_rating`, `engagement_rating`, `qualification_rating`, `comments`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    const q = "INSERT INTO appraisals (`appraiser_name`, `employee_id`, `employee_name`, `position`, `review_period`, `date_joined`, `reviewed_date`, `manager`, `attendance_rating`, `punctuality_rating`, `compliance_rating`, `engagement_rating`, `qualification_rating`, `comments`, `job_knowledge_rating`, `achieved_kpis_rating`, `work_quality_rating`, `initiative_rating`, `time_management_rating`, `accurate_records_rating`, `team_work_rating`, `organizing_planning_rating`, `work_attitude_rating`, `kpis_for_this_year`, `employee_comments_problems`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     
-    const values = [appraiser_name, employee_id, employee_name, position, review_period, date_joined, reviewed_date, manager, attendance_rating, punctuality_rating, compliance_rating, engagement_rating, qualification_rating, comments];
+    const values = [appraiser_name, employee_id, employee_name, position, review_period, date_joined, reviewed_date, manager, attendance_rating, punctuality_rating, compliance_rating, engagement_rating, qualification_rating, comments, job_knowledge_rating, achieved_kpis_rating, work_quality_rating, initiative_rating, time_management_rating, accurate_records_rating, team_work_rating, organizing_planning_rating, work_attitude_rating, kpis_for_this_year, employee_comments_problems];
 
     db.query(q, values, (err, data) => {
         if(err) return res.json(err)

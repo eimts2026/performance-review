@@ -8,7 +8,9 @@ function AddEmployee() {
         last_name: "",
         email: "",
         position: "",
-        date_joined: ""
+        date_joined: "",
+        role: "staff",
+        password: ""
     })
 
     const [successMessage, setSuccessMessage] = useState("")
@@ -31,10 +33,7 @@ function AddEmployee() {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
-                    ...employee,
-                    role: "staff"
-                })
+                body: JSON.stringify(employee)
             })
             const data = await response.json();
             
@@ -47,7 +46,9 @@ function AddEmployee() {
                     last_name: "",
                     email: "",
                     position: "",
-                    date_joined: ""
+                    date_joined: "",
+                    role: "staff",
+                    password: ""
                 })
                 setTimeout(() => setSuccessMessage(""), 3000);
             } else {
@@ -128,6 +129,30 @@ function AddEmployee() {
                             id="date_joined" 
                             name="date_joined" 
                             value={employee.date_joined} 
+                            onChange={handleInputChange}
+                            required
+                        />
+
+                        <label htmlFor="role">Role:</label>
+                        <select 
+                            id="role" 
+                            name="role" 
+                            value={employee.role} 
+                            onChange={handleInputChange}
+                            required
+                        >
+                            <option value="staff">Staff</option>
+                            <option value="manager">Manager</option>
+                            <option value="CEO">CEO</option>
+                            <option value="HR">HR</option>
+                        </select>
+
+                        <label htmlFor="password">Password:</label>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            value={employee.password} 
                             onChange={handleInputChange}
                             required
                         />
