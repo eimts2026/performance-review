@@ -85,7 +85,7 @@ function MainForm() {
         fetchManagers();
     }, [])
 
-    const fetchEmployees = async () => {
+    async function fetchEmployees() {
         try {
             const response = await fetch("http://localhost:8800/users");
             const data = await response.json();
@@ -97,7 +97,7 @@ function MainForm() {
         }
     }
 
-    const fetchManagers = async () => {
+    async function fetchManagers() {
         try {
             const response = await fetch("http://localhost:8800/managers");
             const data = await response.json();
@@ -106,6 +106,11 @@ function MainForm() {
             console.log("Error fetching managers:", error);
         }
     }
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setAppraisal(prev => ({
+            ...prev,
             [name]: value
         }))
     }
@@ -172,10 +177,10 @@ function MainForm() {
         e.preventDefault();
 
         emailjs.sendForm(
-            process.env.VITE_EMAILJS_SERVICEID,
-            process.env.VITE_EMAILJS_TEMPLATEID,
+            import.meta.env.VITE_EMAILJS_SERVICEID,
+            import.meta.env.VITE_EMAILJS_TEMPLATEID,
             form.current,
-            process.env.VITE_EMAILJS_PUBLICKEY
+            import.meta.env.VITE_EMAILJS_PUBLICKEY
         )
         .then((result) => {
             console.log('Email successfully sent!', result.text)

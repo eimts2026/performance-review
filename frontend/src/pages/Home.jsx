@@ -17,7 +17,7 @@ function Home() {
         fetchRecentAppraisals();
     }, [])
 
-    const fetchAllUsers = async () => {
+    async function fetchAllUsers() {
         try {
             const res = await axios.get("http://localhost:8800/users")
             setUsers(res.data)
@@ -26,7 +26,7 @@ function Home() {
         }
     }
 
-    const fetchRecentAppraisals = async () => {
+    async function fetchRecentAppraisals() {
         try {
             const res = await axios.get("http://localhost:8800/appraisals")
             setAppraisals(res.data)
