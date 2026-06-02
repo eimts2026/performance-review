@@ -1,12 +1,14 @@
 import express from "express" 
 import mysql from "mysql2"
 import dotenv from "dotenv"
+import cors from "cors"
 dotenv.config()
 
 // this is used to load the express web thingy
 const app = express({ path: '../.env' })
 
 app.use(express.json())
+app.use(cors())
 
 // initialisation 
 const db = mysql.createConnection({
@@ -30,14 +32,30 @@ app.get("/users", (req, res) => {
     })
 })
 
-// Adding date into employees table
+// Adding employee to database
 app.post("/users", (req, res) => {
-    const q = "INSERT INTO employees (`employee_id`, `first_name`, `last_name`, `email`) VALUES (?)"
-    const values = ["12234", "Jon", "De", "Joe@gmail.com"]
+    const { first_name, last_name, email, position, date_joined } = req.body;
+    
+    const q = "INSERT INTO employees (`first_name`, `last_name`, `email`, `position`, `date_joined`) VALUES (?, ?, ?, ?, ?)";
+    const values = [first_name, last_name, email, position, date_joined];
 
-    db.query(q,[values], (err, data) => {
+    db.query(q, values, (err, data) => {
         if(err) return res.json(err)
-        return res.json("user created")
+        return res.json("employee created successfully")
+    })
+})
+
+// Adding appraisal data to database
+app.post("/appraisals", (req, res) => {
+    const { appraiser_name, employee_name, position, review_period, date_joined, reviewed_date, manager, attendance_rating, punctuality_rating, compliance_rating, engagement_rating, qualification_rating, comments } = req.body;
+    
+    const q = "INSERT INTO appraisals (`appraiser_name`, `employee_name`, `position`, `review_period`, `date_joined`, `reviewed_date`, `manager`, `attendance_rating`, `punctuality_rating`, `compliance_rating`, `engagement_rating`, `qualification_rating`, `comments`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    
+    const values = [appraiser_name, employee_name, position, review_period, date_joined, reviewed_date, manager, attendance_rating, punctuality_rating, compliance_rating, engagement_rating, qualification_rating, comments];
+
+    db.query(q, values, (err, data) => {
+        if(err) return res.json(err)
+        return res.json("appraisal created successfully")
     })
 })
 

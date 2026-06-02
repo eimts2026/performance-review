@@ -1,6 +1,12 @@
-function OptionRender({name, value}) {
+function OptionRender({name, value, selectedValue, onChange}) {
     return (
-        <input name={name} type="radio" value={value}/>
+        <input 
+            name={name} 
+            type="radio" 
+            value={value}
+            checked={selectedValue === value}
+            onChange={onChange}
+        />
     );
 }
 

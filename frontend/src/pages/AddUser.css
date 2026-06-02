@@ -1,0 +1,167 @@
+.form-section {
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    padding: 3rem 1.5rem;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.form-section .info {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.form-section h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #1a1a1a;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.5px;
+}
+
+.form-section p {
+    font-size: 1rem;
+    color: #666;
+}
+
+.form-section .form {
+    background: #ffffff;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Form Grid Design */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    align-items: center;
+    margin-bottom: 3rem;
+    box-sizing: border-box;
+}
+
+.form-grid label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #333;
+    grid-column: span 1;
+}
+
+.form-grid input,
+.form-grid select {
+    grid-column: span 1;
+    height: 42px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: #fafafa;
+    padding: 0 1rem;
+    font-size: 0.9rem;
+    color: #333;
+    transition: all 0.2s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-grid input:focus,
+.form-grid select:focus {
+    outline: none;
+    border-color: #1a1a1a;
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Button Container */
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+/* Submit Button */
+.review-button {
+    background-color: #50c878;
+    color: white;
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 150px;
+}
+
+.review-button:hover {
+    background-color: #3da15f;
+    box-shadow: 0 4px 12px rgba(80, 200, 120, 0.3);
+}
+
+.review-button:active {
+    transform: scale(0.98);
+}
+
+/* Success and Error Messages */
+.success-message {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 500;
+}
+
+.error-message {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .form-section h1 {
+        font-size: 2rem;
+    }
+
+    .form-section .form {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grid label {
+        grid-column: span 1;
+    }
+
+    .form-grid input,
+    .form-grid select {
+        grid-column: span 1;
+    }
+
+    .form-section h1 {
+        font-size: 1.5rem;
+    }
+
+    .form-section .form {
+        padding: 1rem;
+    }
+}

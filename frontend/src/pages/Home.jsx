@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+import axios from "axios"
 import './Home.css'
 
 const uses = [
@@ -6,6 +8,22 @@ const uses = [
 ]
 
 function Home() {
+    
+    const [users, setUsers] = useState([])
+
+    useEffect(() => {
+        const fetchAllUsers = async () => {
+            try {
+                const res = await axios.get("http://localhost:8800/users")
+                setUsers(res.data)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+        fetchAllUsers()
+    }, [])
+    // the empty array means this only runs once
+
     return (
         <>
             <section className="home-section">
@@ -20,6 +38,15 @@ function Home() {
                     ))}
                 </div>
             </section>
+
+            {/* <div className="new">
+                <h1>hi</h1>
+                {users.map(user => (
+                    <div className="user" key={user.employee_id}>
+                        {user.first_name}
+                    </div>
+                ))}
+            </div> */}
         </>
     );
 }
