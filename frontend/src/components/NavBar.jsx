@@ -26,7 +26,8 @@ function NavBar() {
                 </div>
                 {/* navbar right */}
                 <div className="navbar-right">
-                    <a href="/addUser" className="contact">Add User</a>
+                    <a href="/addEmployee" className="contact">Add Employee</a>
+                    <a href="/addUser" className="contact">Add Manager</a>
                 </div>
             </nav>
         </>

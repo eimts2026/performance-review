@@ -32,4 +32,100 @@ body {
     border: 1px solid;
 }
 
+/* Recent Appraisals Section */
+.recent-appraisals {
+    max-width: 1200px;
+    margin: 4rem auto;
+    padding: 2rem;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+}
 
+.recent-appraisals h2 {
+    font-size: 1.8rem;
+    color: #1a1a1a;
+    margin-bottom: 2rem;
+    font-weight: 700;
+}
+
+.appraisals-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.appraisal-card {
+    background: #f8f9fa;
+    border-left: 4px solid #50c878;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.appraisal-card:hover {
+    box-shadow: 0 4px 16px rgba(80, 200, 120, 0.15);
+    transform: translateY(-2px);
+}
+
+.appraisal-header {
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 1rem;
+}
+
+.appraisal-header h3 {
+    font-size: 1.2rem;
+    color: #1a1a1a;
+    margin: 0 0 0.5rem 0;
+}
+
+.employee-id {
+    display: inline-block;
+    background: #50c878;
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.appraisal-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.appraisal-details p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.appraisal-details strong {
+    color: #1a1a1a;
+}
+
+.no-appraisals {
+    text-align: center;
+    color: #999;
+    font-size: 1rem;
+    padding: 2rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .appraisals-list {
+        grid-template-columns: 1fr;
+    }
+
+    .recent-appraisals h2 {
+        font-size: 1.5rem;
+    }
+
+    .recent-appraisals {
+        margin: 2rem 1rem;
+        padding: 1.5rem;
+    }
+}

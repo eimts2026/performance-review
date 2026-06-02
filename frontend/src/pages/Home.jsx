@@ -10,19 +10,30 @@ const uses = [
 function Home() {
     
     const [users, setUsers] = useState([])
+    const [appraisals, setAppraisals] = useState([])
 
     useEffect(() => {
-        const fetchAllUsers = async () => {
-            try {
-                const res = await axios.get("http://localhost:8800/users")
-                setUsers(res.data)
-            } catch (err) {
-                console.log(err)
-            }
-        }
-        fetchAllUsers()
+        fetchAllUsers();
+        fetchRecentAppraisals();
     }, [])
-    // the empty array means this only runs once
+
+    const fetchAllUsers = async () => {
+        try {
+            const res = await axios.get("http://localhost:8800/users")
+            setUsers(res.data)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const fetchRecentAppraisals = async () => {
+        try {
+            const res = await axios.get("http://localhost:8800/appraisals")
+            setAppraisals(res.data)
+        } catch (err) {
+            console.log(err)
+        }
+    }
 
     return (
         <>
@@ -34,19 +45,35 @@ function Home() {
             
                 <div className="container">
                     {uses.map((use) => (
-                        <a href={use.link}><div id={use.id}>{use.name}</div></a>
+                        <a key={use.id} href={use.link}><div id={use.id}>{use.name}</div></a>
                     ))}
                 </div>
-            </section>
 
-            {/* <div className="new">
-                <h1>hi</h1>
-                {users.map(user => (
-                    <div className="user" key={user.employee_id}>
-                        {user.first_name}
-                    </div>
-                ))}
-            </div> */}
+                {/* Recent Appraisals Section */}
+                <div className="recent-appraisals">
+                    <h2>Recent Appraisals Completed</h2>
+                    {appraisals.length > 0 ? (
+                        <div className="appraisals-list">
+                            {appraisals.slice(0, 5).map((appraisal, index) => (
+                                <div key={index} className="appraisal-card">
+                                    <div className="appraisal-header">
+                                        <h3>{appraisal.employee_name}</h3>
+                                        <span className="employee-id">ID: {appraisal.employee_id}</span>
+                                    </div>
+                                    <div className="appraisal-details">
+                                        <p><strong>Position:</strong> {appraisal.position}</p>
+                                        <p><strong>Manager:</strong> {appraisal.manager}</p>
+                                        <p><strong>Review Date:</strong> {new Date(appraisal.reviewed_date).toLocaleDateString()}</p>
+                                        <p><strong>Appraiser:</strong> {appraisal.appraiser_name}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="no-appraisals">No appraisals completed yet</p>
+                    )}
+                </div>
+            </section>
         </>
     );
 }

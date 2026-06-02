@@ -10,8 +10,6 @@ const form_top = [
     {id: "rev-dt", Text: "Reviewed Date:", type: "date", name: "reviewed_date"},
 ]
 
-const managers = ["Manager 1", "Manager 2", "Manager 3", "Manager 4", "Manager 5"]
-
 const quickRender = (name, value, onChange) => {
     const ratings = ["A", "B", "C", "D", "E"]
     const list = []
@@ -30,6 +28,7 @@ function MainForm() {
 
     // State for employees list
     const [employees, setEmployees] = useState([])
+    const [managers, setManagers] = useState([])
     const [loadingEmployees, setLoadingEmployees] = useState(true)
 
     // JS to add to DB
@@ -42,6 +41,7 @@ function MainForm() {
         date_joined: "",
         reviewed_date: "",
         manager: "",
+        manager_email: "",
         attendance_rating: "",
         punctuality_rating: "",
         compliance_rating: "",
@@ -52,7 +52,7 @@ function MainForm() {
 
     // Fetch employees on component mount
     useEffect(() => {
-        fetchEmployees();
+        fetchManagers();
     }, [])
 
     const fetchEmployees = async () => {
@@ -64,6 +64,16 @@ function MainForm() {
         } catch (error) {
             console.log("Error fetching employees:", error);
             setLoadingEmployees(false);
+        }
+    }
+
+    const fetchManagers = async () => {
+        try {
+            const response = await fetch("http://localhost:8800/managers");
+            const data = await response.json();
+            setManagers(data);
+        } catch (error) {
+            console.log("Error fetching managers:", error);
         }
     }
 
@@ -88,6 +98,20 @@ function MainForm() {
                 employee_name: selectedEmployee.first_name + " " + selectedEmployee.last_name,
                 position: selectedEmployee.position || "",
                 date_joined: selectedEmployee.date_joined || ""
+            }))
+        }
+    }
+
+    // Handle manager selection
+    const handleManagerChange = (e) => {
+        const managerId = e.target.value;
+        const selectedManager = managers.find(mgr => mgr.manager_id == managerId);
+        
+        if(selectedManager) {
+            setUser(prev => ({
+                ...prev,
+                manager: selectedManager.first_name + " " + selectedManager.last_name,
+                manager_email: selectedManager.email
             }))
         }
     }
@@ -176,10 +200,12 @@ function MainForm() {
 
                         {/* Manager Dropdown */}
                         <label htmlFor="mgr">Manager:</label>
-                        <select id="mgr" name="manager" value={user.manager} onChange={handleInputChange}>
+                        <select id="mgr" value={user.manager_email} onChange={handleManagerChange}>
                             <option value="">Select a Manager</option>
-                            {managers.map((mgr, index) => (
-                                <option key={index} value={mgr}>{mgr}</option>
+                            {managers.map((mgr) => (
+                                <option key={mgr.manager_id} value={mgr.manager_id}>
+                                    {mgr.first_name} {mgr.last_name}
+                                </option>
                             ))}
                         </select>
                     </div>

@@ -1,13 +1,14 @@
 import './AddUser.css'
 import { useState } from 'react'
 
-function AddUser() {
-    const [manager, setManager] = useState({
+function AddEmployee() {
+    const [employee, setEmployee] = useState({
         employee_id: "",
         first_name: "",
         last_name: "",
         email: "",
-        position: ""
+        position: "",
+        date_joined: ""
     })
 
     const [successMessage, setSuccessMessage] = useState("")
@@ -15,7 +16,7 @@ function AddUser() {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setManager(prev => ({
+        setEmployee(prev => ({
             ...prev,
             [name]: value
         }))
@@ -31,29 +32,30 @@ function AddUser() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    ...manager,
-                    role: "manager"
+                    ...employee,
+                    role: "staff"
                 })
             })
             const data = await response.json();
             
             if(response.ok) {
-                setSuccessMessage("Manager added successfully!");
+                setSuccessMessage("Employee added successfully!");
                 setErrorMessage("");
-                setManager({
+                setEmployee({
                     employee_id: "",
                     first_name: "",
                     last_name: "",
                     email: "",
-                    position: ""
+                    position: "",
+                    date_joined: ""
                 })
                 setTimeout(() => setSuccessMessage(""), 3000);
             } else {
-                setErrorMessage("Failed to add manager");
+                setErrorMessage("Failed to add employee");
             }
         } catch (error) {
-            console.log("Error adding manager:", error);
-            setErrorMessage("Error adding manager to database");
+            console.log("Error adding employee:", error);
+            setErrorMessage("Error adding employee to database");
         }
     }
 
@@ -61,8 +63,8 @@ function AddUser() {
         <div style={{ width: '100%', maxWidth: '100vw', overflowX: 'hidden', boxSizing: 'border-box' }}>
             <section className='form-section'>
                 <div className='info'>
-                    <h1>Add New Manager</h1>
-                    <p>Fill in the manager details below to add them to the system</p>
+                    <h1>Add New Employee</h1>
+                    <p>Fill in the employee details below to add them to the system</p>
                 </div>
 
                 <form className='form' onSubmit={handleSubmit}>
@@ -75,7 +77,7 @@ function AddUser() {
                             type="text" 
                             id="employee_id" 
                             name="employee_id" 
-                            value={manager.employee_id} 
+                            value={employee.employee_id} 
                             onChange={handleInputChange}
                             required
                         />
@@ -85,7 +87,7 @@ function AddUser() {
                             type="text" 
                             id="first_name" 
                             name="first_name" 
-                            value={manager.first_name} 
+                            value={employee.first_name} 
                             onChange={handleInputChange}
                             required
                         />
@@ -95,7 +97,7 @@ function AddUser() {
                             type="text" 
                             id="last_name" 
                             name="last_name" 
-                            value={manager.last_name} 
+                            value={employee.last_name} 
                             onChange={handleInputChange}
                             required
                         />
@@ -105,7 +107,7 @@ function AddUser() {
                             type="email" 
                             id="email" 
                             name="email" 
-                            value={manager.email} 
+                            value={employee.email} 
                             onChange={handleInputChange}
                             required
                         />
@@ -115,14 +117,24 @@ function AddUser() {
                             type="text" 
                             id="position" 
                             name="position" 
-                            value={manager.position} 
+                            value={employee.position} 
+                            onChange={handleInputChange}
+                            required
+                        />
+
+                        <label htmlFor="date_joined">Date Joined:</label>
+                        <input 
+                            type="date" 
+                            id="date_joined" 
+                            name="date_joined" 
+                            value={employee.date_joined} 
                             onChange={handleInputChange}
                             required
                         />
                     </div>
 
                     <div className='button-container'>
-                        <input type="submit" className="review-button" value="Add Manager" />
+                        <input type="submit" className="review-button" value="Add Employee" />
                     </div>
                 </form>
             </section>
@@ -130,4 +142,4 @@ function AddUser() {
     );
 }
 
-export default AddUser;
+export default AddEmployee;
