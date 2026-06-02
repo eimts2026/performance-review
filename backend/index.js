@@ -25,9 +25,18 @@ app.get("/", (req, res) => {
 
 // Getting all employees from the DB
 app.get("/users", (req, res) => {
-    const q = "SELECT * FROM employees"
-    db.query(q, (err,data) => {
-        if(err) return res.json(err)
+    const q = "SELECT employee_id, first_name, last_name, email, department, job_title AS position, hire_date AS date_joined, role FROM employees"
+    db.query(q, (err, data) => {
+        if(err) return res.status(500).json(err)
+        return res.json(data)
+    })
+})
+
+// Getting all managers from the DB
+app.get("/managers", (req, res) => {
+    const q = "SELECT employee_id, first_name, last_name, email, department, job_title AS position, hire_date AS date_joined, role FROM employees WHERE role = 'manager'"
+    db.query(q, (err, data) => {
+        if(err) return res.status(500).json(err)
         return res.json(data)
     })
 })
@@ -36,11 +45,14 @@ app.get("/users", (req, res) => {
 app.post("/users", (req, res) => {
     const { employee_id, first_name, last_name, email, position, date_joined, role, password } = req.body;
     
-    const q = "INSERT INTO employees (`employee_id`, `first_name`, `last_name`, `email`, `position`, `date_joined`, `role`, `password`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    const q = "INSERT INTO employees (`employee_id`, `first_name`, `last_name`, `email`, `job_title`, `hire_date`, `role`, `passwords`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     const values = [employee_id, first_name, last_name, email, position, date_joined, role || 'staff', password || ''];
 
     db.query(q, values, (err, data) => {
-        if(err) return res.json(err)
+        if(err) {
+            console.error("Error inserting employee:", err);
+            return res.status(500).json(err);
+        }
         return res.json("user created successfully")
     })
 })
@@ -49,10 +61,13 @@ app.post("/users", (req, res) => {
 app.post("/login", (req, res) => {
     const { first_name, password } = req.body;
     
-    const q = "SELECT * FROM employees WHERE first_name = ? AND password = ?";
+    const q = "SELECT * FROM employees WHERE first_name = ? AND passwords = ?";
     
     db.query(q, [first_name, password], (err, data) => {
-        if(err) return res.json(err)
+        if(err) {
+            console.error("Login database error:", err);
+            return res.status(500).json(err);
+        }
         if(data.length === 0) return res.status(401).json("Invalid credentials")
         
         const user = data[0];
@@ -62,7 +77,7 @@ app.post("/login", (req, res) => {
             last_name: user.last_name,
             email: user.email,
             role: user.role,
-            position: user.position
+            position: user.job_title
         })
     })
 })

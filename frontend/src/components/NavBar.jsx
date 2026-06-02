@@ -37,11 +37,6 @@ function NavBar() {
                         <li>
                             <a href="/">Home</a>
                         </li>
-                        {user && user.role === 'HR' && (
-                            <li>
-                                <a href="/form">Appraisal Form</a>
-                            </li>
-                        )}
                     </ul>
                 </div>
                 {/* navbar right */}

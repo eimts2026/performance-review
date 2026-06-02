@@ -52,11 +52,19 @@ function AddEmployee() {
                 })
                 setTimeout(() => setSuccessMessage(""), 3000);
             } else {
-                setErrorMessage("Failed to add employee");
+                if (data && data.code === 'ER_DUP_ENTRY') {
+                    if (data.sqlMessage && data.sqlMessage.includes('email')) {
+                        setErrorMessage("Failed to add employee: Email is already registered.");
+                    } else {
+                        setErrorMessage("Failed to add employee: Employee ID is already registered.");
+                    }
+                } else {
+                    setErrorMessage(data?.message || "Failed to add employee");
+                }
             }
         } catch (error) {
             console.log("Error adding employee:", error);
-            setErrorMessage("Error adding employee to database");
+            setErrorMessage("Error adding employee to database: " + error.message);
         }
     }
 
