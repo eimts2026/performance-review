@@ -137,14 +137,20 @@ function ProbationForm() {
 
     const sendEmail = () => {
         const selectedManager = managers.find(mgr => mgr.employee_id == probation.department_head);
+        const managerName = selectedManager ? selectedManager.first_name + ' ' + selectedManager.last_name : '';
+        const managerEmail = selectedManager ? selectedManager.email : '';
+        
         const templateParams = {
+            name: managerName,
+            title: `Probation Review for ${probation.name} (${probation.role})`,
+            to_email: managerEmail,
+            manager_email: managerEmail,
             employee_name: probation.name,
             employee_id: probation.employee_id,
             department: probation.department,
             role: probation.role,
             date_of_review: probation.date_of_review,
-            manager: selectedManager ? selectedManager.first_name + ' ' + selectedManager.last_name : '',
-            manager_email: selectedManager ? selectedManager.email : '',
+            manager: managerName,
             appraisers_comments: probation.appraisers_comments
         };
 

@@ -114,6 +114,24 @@ body {
     padding: 2rem;
 }
 
+/* Pending Appraisals Styling */
+.pending-section {
+    margin-bottom: 2rem;
+}
+
+.appraisal-card.pending-card {
+    border-left: 4px solid #ec9a29; /* Curator harmonious amber color */
+}
+
+.appraisal-card.pending-card:hover {
+    box-shadow: 0 4px 16px rgba(236, 154, 41, 0.15);
+}
+
+.employee-id.pending-id {
+    background: #ec9a29;
+}
+
+
 /* Responsive */
 @media (max-width: 768px) {
     .appraisals-list {

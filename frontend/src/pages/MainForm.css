@@ -375,8 +375,8 @@
     margin-top: 2rem;
     padding: 2rem;
     background-color: #f8f9fa;
-    border-left: 4px solid #50c878;
     border-radius: 8px;
+    border: 1px solid #e5e7eb;
 }
 
 .hr-section h3 {
@@ -413,6 +413,7 @@
     font-size: 0.9rem;
     resize: vertical;
     background-color: #ffffff;
+    color: #333;
 }
 
 .textarea-group textarea:focus {
@@ -424,5 +425,83 @@
 @media (max-width: 768px) {
     .hr-textarea-section {
         grid-template-columns: 1fr;
+    }
+}
+
+/* Manager Section Styling */
+.manager-section {
+    margin-top: 2rem;
+    padding: 2rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+}
+
+.manager-section h3 {
+    color: #1a1a1a;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.3rem;
+}
+
+.manager-section > p {
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+.manager-textarea-section {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+/* Button Group */
+.button-group {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.send-for-review-btn,
+.complete-appraisal-btn {
+    background-color: #50c878;
+    color: white;
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex: 1;
+    max-width: 300px;
+}
+
+.send-for-review-btn:hover,
+.complete-appraisal-btn:hover {
+    background-color: #3da15f;
+    box-shadow: 0 4px 12px rgba(80, 200, 120, 0.3);
+}
+
+.send-for-review-btn:active,
+.complete-appraisal-btn:active {
+    transform: scale(0.98);
+}
+
+@media (max-width: 768px) {
+    .manager-textarea-section {
+        grid-template-columns: 1fr;
+    }
+
+    .button-group {
+        flex-direction: column;
+    }
+
+    .send-for-review-btn,
+    .complete-appraisal-btn {
+        max-width: 100%;
     }
 }
