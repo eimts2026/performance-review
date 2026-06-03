@@ -385,6 +385,7 @@ app.get("/probation/manager/:departmentHead", (req, res) => {
 })
 
 // this is to test whether the connection works and thec code works
-app.listen(8800, () => {
-    console.log("Connected to backend!")
+const PORT = process.env.PORT || 8800
+app.listen(PORT, () => {
+    console.log(`Connected to backend on port ${PORT}!`)
 })
