@@ -1,180 +1,277 @@
+/* Page Body */
 body {
-    background-color: var(--main-bg-color);
+    background-color: #f8fafc;
+    color: #334155;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-/* GRID SECTION */
+/* Home Section Layout */
+.home-section {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem;
+}
+
+/* Info Headers */
+.home-section .info {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.home-section .info h1 {
+    font-size: 2.25rem;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.5px;
+    margin-bottom: 0.5rem;
+}
+
 .home-section .info p {
-    color: black;
-    font-size: var(--p-font-size);
+    color: #64748b;
+    font-size: 1.05rem;
 }
 
+/* Form Action Buttons Container */
 .home-section .container {
     display: grid;
-    grid-template-columns: auto auto;
-    background-color: gold;
-    padding: 10px;
-    margin: 0 auto;
-    max-width: 70%;
-    margin-top: 50px;
-    gap: 30px;
-}
-
-.home-section .container div {
-    background-color: #50c878;
-    color: blue;
-    padding: 10px;
-    text-align: center;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    padding: 0;
+    margin: 0 auto 3rem auto;
+    max-width: 800px;
+    background-color: transparent;
 }
 
 .home-section .container a {
     text-decoration: none;
-    font-weight: bold;
-    border: 1px solid;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Recent Appraisals Section */
+.home-section .container div {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    color: #ffffff;
+    padding: 1.5rem;
+    text-align: center;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+.home-section .container a:hover div {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.2), 0 4px 6px -4px rgba(16, 185, 129, 0.2);
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+/* Tabs Styling */
+.tabs {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin: 2.5rem auto 1.5rem auto;
+    max-width: 1200px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.tab-button {
+    padding: 12px 28px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #64748b;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.tab-button:hover {
+    color: #0f172a;
+}
+
+.tab-button.active {
+    color: #10b981;
+    border-bottom-color: #10b981;
+}
+
+/* Appraisals Sections */
 .recent-appraisals {
     max-width: 1200px;
     margin: 2rem auto;
-    padding: 1.25rem;
+    padding: 1.5rem;
     background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+    border-radius: 16px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f1f5f9;
 }
 
 .recent-appraisals h2 {
-    font-size: 1.6rem;
-    color: #1a1a1a;
+    font-size: 1.35rem;
+    color: #0f172a;
     margin-bottom: 1.25rem;
     font-weight: 700;
+    border-left: 4px solid #10b981;
+    padding-left: 0.75rem;
+}
+
+.pending-section h2 {
+    border-left-color: #d97706;
 }
 
 .appraisals-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.25rem;
 }
 
+/* Card Styling */
 .appraisal-card {
-    background: #f8f9fa;
-    border-left: 4px solid #50c878;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #10b981;
     padding: 1.25rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
+    border-radius: 12px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.02);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
 }
 
 .appraisal-card:hover {
-    box-shadow: 0 4px 16px rgba(80, 200, 120, 0.15);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
     transform: translateY(-2px);
+    border-color: #cbd5e1;
 }
 
+.appraisal-card.pending-card {
+    border-left-color: #d97706;
+}
+
+.appraisal-card.pending-card:hover {
+    border-color: #fed7aa;
+}
+
+/* Headers inside cards */
 .appraisal-header {
-    margin-bottom: 1rem;
-    border-bottom: 2px solid #e5e7eb;
-    padding-bottom: 1rem;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .appraisal-header h3 {
-    font-size: 1.2rem;
-    color: #1a1a1a;
-    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+    color: #0f172a;
+    font-weight: 700;
+    margin: 0;
 }
 
 .employee-id {
     display: inline-block;
-    background: #50c878;
-    color: white;
-    padding: 0.3rem 0.8rem;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    font-weight: 600;
+    background: #e2e8f0;
+    color: #475569;
+    padding: 0.25rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
 }
 
+.employee-id.pending-id {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+/* Details inside cards */
 .appraisal-details {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
 }
 
 .appraisal-details p {
     margin: 0;
-    font-size: 0.9rem;
-    color: #555;
+    font-size: 0.875rem;
+    color: #64748b;
 }
 
 .appraisal-details strong {
-    color: #1a1a1a;
+    color: #334155;
+    font-weight: 600;
 }
 
 .no-appraisals {
     text-align: center;
-    color: #999;
-    font-size: 1rem;
-    padding: 2rem;
+    color: #94a3b8;
+    font-size: 0.95rem;
+    padding: 3rem 1.5rem;
 }
 
-/* Pending Appraisals Styling */
-.pending-section {
-    margin-bottom: 2rem;
+/* Action Buttons inside cards */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 0.75rem;
+    border-top: 1px solid #f1f5f9;
 }
 
-.appraisal-card.pending-card {
-    border-left: 4px solid #ec9a29; /* Curator harmonious amber color */
+.action-btn {
+    flex: 1;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
 }
 
-.appraisal-card.pending-card:hover {
-    box-shadow: 0 4px 16px rgba(236, 154, 41, 0.15);
+.edit-btn {
+    background-color: #f1f5f9;
+    color: #1e293b;
 }
 
-.employee-id.pending-id {
-    background: #ec9a29;
+.edit-btn:hover {
+    background-color: #e2e8f0;
 }
 
+.export-btn {
+    background-color: #10b981;
+    color: #ffffff;
+}
 
-/* Responsive */
+.export-btn:hover {
+    background-color: #059669;
+}
+
+.delete-btn {
+    background-color: #ef4444 !important;
+    color: #ffffff !important;
+}
+
+.delete-btn:hover {
+    background-color: #dc2626 !important;
+}
+
+/* Responsive Grid layouts */
 @media (max-width: 768px) {
     .appraisals-list {
         grid-template-columns: 1fr;
     }
 
     .recent-appraisals h2 {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
     }
 
     .recent-appraisals {
-        margin: 2rem 1rem;
-        padding: 1.5rem;
+        margin: 1.5rem 0.75rem;
+        padding: 1.25rem;
     }
-}
-
-/* Tabs Styling */
-.tabs {
-    display: flex;
-    gap: 10px;
-    margin: 2rem auto 0 auto;
-    max-width: 1200px;
-    padding: 0 2rem;
-    border-bottom: 2px solid #e0e0e0;
-}
-
-.tab-button {
-    padding: 12px 24px;
-    border: none;
-    background: none;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 500;
-    color: #666;
-    border-bottom: 3px solid transparent;
-    transition: all 0.3s ease;
-}
-
-.tab-button:hover {
-    color: #333;
-}
-
-.tab-button.active {
-    color: #2196F3;
-    border-bottom-color: #2196F3;
 }

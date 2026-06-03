@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import './Home.css';
 import { exportAppraisalToPDF, exportProbationToPDF } from '../components/ExportPDF';
+import emailjs from '@emailjs/browser';
 
 const uses = [
     {id: 1, name: 'Apply Appraisal', link: '/form'},
@@ -17,13 +18,34 @@ function Home() {
     const [activeTab, setActiveTab] = useState("appraisals")
     const navigate = useNavigate();
 
-    async function handleDeleteAppraisal(reviewId) {
+    async function handleDeleteAppraisal(reviewId, appraisalObj) {
         if (!window.confirm("Are you sure you want to delete this appraisal record from the entire database?")) {
             return;
         }
         try {
             await axios.delete(`http://localhost:8800/appraisals/${reviewId}`);
             alert("Appraisal record deleted successfully.");
+            
+            if (appraisalObj && appraisalObj.manager_email) {
+                const templateParams = {
+                    name: appraisalObj.manager,
+                    title: `RECORD DELETED: Performance Appraisal for ${appraisalObj.employee_name}`,
+                    to_email: appraisalObj.manager_email,
+                    manager_email: appraisalObj.manager_email,
+                    employee_name: appraisalObj.employee_name,
+                    employee_id: appraisalObj.employee_id,
+                    manager: appraisalObj.manager,
+                    reviewed_date: appraisalObj.reviewed_date,
+                    comments: `This performance appraisal review has been cancelled or deleted from the database by human resources.`
+                };
+                emailjs.send(
+                    import.meta.env.VITE_EMAILJS_SERVICEKEY,
+                    import.meta.env.VITE_EMAILJS_TEMPLATEID,
+                    templateParams,
+                    import.meta.env.VITE_EMAILJS_PUBLICKEY
+                ).catch(err => console.error("Email send failed:", err));
+            }
+            
             fetchRecentAppraisals();
         } catch (err) {
             console.error("Error deleting appraisal:", err);
@@ -31,13 +53,38 @@ function Home() {
         }
     }
 
-    async function handleDeleteProbation(probationId) {
+    async function handleDeleteProbation(probationId, probationObj) {
         if (!window.confirm("Are you sure you want to delete this probation record from the entire database?")) {
             return;
         }
         try {
             await axios.delete(`http://localhost:8800/probation/${probationId}`);
             alert("Probation record deleted successfully.");
+            
+            if (probationObj && probationObj.department_head) {
+                const selectedManager = users.find(mgr => String(mgr.employee_id) === String(probationObj.department_head));
+                if (selectedManager && selectedManager.email) {
+                    const managerName = `${selectedManager.first_name} ${selectedManager.last_name}`;
+                    const templateParams = {
+                        name: managerName,
+                        title: `RECORD DELETED: Probation Review for ${probationObj.name}`,
+                        to_email: selectedManager.email,
+                        manager_email: selectedManager.email,
+                        employee_name: probationObj.name,
+                        employee_id: probationObj.employee_id,
+                        manager: managerName,
+                        reviewed_date: probationObj.date_of_review,
+                        comments: `This probation evaluation review has been cancelled or deleted from the database by human resources.`
+                    };
+                    emailjs.send(
+                        import.meta.env.VITE_EMAILJS_SERVICEKEY,
+                        import.meta.env.VITE_EMAILJS_TEMPLATEID,
+                        templateParams,
+                        import.meta.env.VITE_EMAILJS_PUBLICKEY
+                    ).catch(err => console.error("Email send failed:", err));
+                }
+            }
+            
             fetchAllProbations();
         } catch (err) {
             console.error("Error deleting probation:", err);
@@ -268,7 +315,7 @@ function Home() {
                                                 </button>
                                                 <button 
                                                     className="action-btn delete-btn" 
-                                                    onClick={() => handleDeleteAppraisal(appraisal.review_id)}
+                                                    onClick={() => handleDeleteAppraisal(appraisal.review_id, appraisal)}
                                                     style={{ flex: 1, padding: '6px 12px', background: '#F44336', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
                                                 >
                                                     Delete
@@ -316,7 +363,7 @@ function Home() {
                                                 </button>
                                                 <button 
                                                     className="action-btn delete-btn" 
-                                                    onClick={() => handleDeleteAppraisal(appraisal.review_id)}
+                                                    onClick={() => handleDeleteAppraisal(appraisal.review_id, appraisal)}
                                                     style={{ flex: 1, padding: '6px 12px', background: '#F44336', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
                                                 >
                                                     Delete
@@ -358,7 +405,7 @@ function Home() {
                                                 </button>
                                                 <button 
                                                     className="action-btn delete-btn" 
-                                                    onClick={() => handleDeleteProbation(probation.probation_id)}
+                                                    onClick={() => handleDeleteProbation(probation.probation_id, probation)}
                                                     style={{ flex: 1, padding: '6px 12px', background: '#F44336', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
                                                 >
                                                     Delete
@@ -405,7 +452,7 @@ function Home() {
                                                 </button>
                                                 <button 
                                                     className="action-btn delete-btn" 
-                                                    onClick={() => handleDeleteProbation(probation.probation_id)}
+                                                    onClick={() => handleDeleteProbation(probation.probation_id, probation)}
                                                     style={{ flex: 1, padding: '6px 12px', background: '#F44336', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
                                                 >
                                                     Delete

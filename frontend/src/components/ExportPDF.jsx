@@ -173,8 +173,8 @@ export const exportAppraisalToPDF = async (appraisal) => {
             }
             
             .signatures-container td {
-                width: 33%;
-                padding: 0 15px;
+                width: 25%;
+                padding: 0 8px;
                 vertical-align: bottom;
                 border: none;
             }
@@ -183,7 +183,7 @@ export const exportAppraisalToPDF = async (appraisal) => {
                 border-top: 1px solid #333;
                 margin-top: 45px;
                 text-align: center;
-                font-size: 9pt;
+                font-size: 8.5pt;
                 padding-top: 5px;
             }
         </style>
@@ -335,7 +335,7 @@ export const exportAppraisalToPDF = async (appraisal) => {
                 <tr>
                     <td>
                         <div class="signature-line">
-                            Line Manager / Reviewer Signature
+                            Line Manager Signature
                         </div>
                     </td>
                     <td>
@@ -345,7 +345,12 @@ export const exportAppraisalToPDF = async (appraisal) => {
                     </td>
                     <td>
                         <div class="signature-line">
-                            HR Director Authorization / Date
+                            CEO / Director Signature
+                        </div>
+                    </td>
+                    <td>
+                        <div class="signature-line">
+                            HR Director Authorization
                         </div>
                     </td>
                 </tr>
@@ -377,6 +382,21 @@ export const exportProbationToPDF = async (probation) => {
             day: 'numeric'
         });
     };
+
+    // Try to resolve the manager name from user ID
+    let managerName = probation.department_head || 'N/A';
+    try {
+        const response = await fetch("http://localhost:8800/users");
+        if (response.ok) {
+            const users = await response.json();
+            const manager = users.find(u => String(u.employee_id) === String(probation.department_head));
+            if (manager) {
+                managerName = `${manager.first_name} ${manager.last_name}`;
+            }
+        }
+    } catch (err) {
+        console.error("Error resolving manager details:", err);
+    }
 
     const ratingLabels = {
         '4': '4 - Excellent / Exceeds Standards',
@@ -539,8 +559,8 @@ export const exportProbationToPDF = async (probation) => {
             }
             
             .signatures-container td {
-                width: 33%;
-                padding: 0 15px;
+                width: 25%;
+                padding: 0 8px;
                 vertical-align: bottom;
                 border: none;
             }
@@ -549,7 +569,7 @@ export const exportProbationToPDF = async (probation) => {
                 border-top: 1px solid #333;
                 margin-top: 45px;
                 text-align: center;
-                font-size: 9pt;
+                font-size: 8.5pt;
                 padding-top: 5px;
             }
         </style>
@@ -586,7 +606,7 @@ export const exportProbationToPDF = async (probation) => {
                 </tr>
                 <tr>
                     <td class="label">Line Manager/Evaluator:</td>
-                    <td class="value" colspan="3">${probation.department_head || 'N/A'}</td>
+                    <td class="value" colspan="3">${managerName}</td>
                 </tr>
             </table>
             
@@ -651,6 +671,11 @@ export const exportProbationToPDF = async (probation) => {
                     <td>
                         <div class="signature-line">
                             Employee Signature / Date
+                        </div>
+                    </td>
+                    <td>
+                        <div class="signature-line">
+                            CEO Signature / Date
                         </div>
                     </td>
                     <td>

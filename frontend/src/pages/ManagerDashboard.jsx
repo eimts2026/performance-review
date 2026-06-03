@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './ManagerDashboard.css';
 import { exportAppraisalToPDF, exportProbationToPDF } from '../components/ExportPDF';
+import emailjs from '@emailjs/browser';
 
 function ManagerDashboard() {
     const [user, setUser] = useState(null);
@@ -22,13 +23,34 @@ function ManagerDashboard() {
         }));
     };
 
-    const handleDeleteAppraisal = async (reviewId) => {
+    const handleDeleteAppraisal = async (reviewId, appraisalObj) => {
         if (!window.confirm("Are you sure you want to delete this appraisal record from the entire database?")) {
             return;
         }
         try {
             await axios.delete(`http://localhost:8800/appraisals/${reviewId}`);
             alert("Appraisal record deleted successfully.");
+            
+            if (appraisalObj && appraisalObj.manager_email) {
+                const templateParams = {
+                    name: appraisalObj.manager,
+                    title: `RECORD DELETED: Performance Appraisal for ${appraisalObj.employee_name}`,
+                    to_email: appraisalObj.manager_email,
+                    manager_email: appraisalObj.manager_email,
+                    employee_name: appraisalObj.employee_name,
+                    employee_id: appraisalObj.employee_id,
+                    manager: appraisalObj.manager,
+                    reviewed_date: appraisalObj.reviewed_date,
+                    comments: `This performance appraisal review has been cancelled or deleted from the database.`
+                };
+                emailjs.send(
+                    import.meta.env.VITE_EMAILJS_SERVICEKEY,
+                    import.meta.env.VITE_EMAILJS_TEMPLATEID,
+                    templateParams,
+                    import.meta.env.VITE_EMAILJS_PUBLICKEY
+                ).catch(err => console.error("Email send failed:", err));
+            }
+            
             fetchManagerAppraisals(user.first_name + " " + user.last_name);
         } catch (err) {
             console.error("Error deleting appraisal:", err);
@@ -36,13 +58,35 @@ function ManagerDashboard() {
         }
     };
 
-    const handleDeleteProbation = async (probationId) => {
+    const handleDeleteProbation = async (probationId, probationObj) => {
         if (!window.confirm("Are you sure you want to delete this probation record from the entire database?")) {
             return;
         }
         try {
             await axios.delete(`http://localhost:8800/probation/${probationId}`);
             alert("Probation record deleted successfully.");
+            
+            if (user && user.email && probationObj) {
+                const managerName = `${user.first_name} ${user.last_name}`;
+                const templateParams = {
+                    name: managerName,
+                    title: `RECORD DELETED: Probation Review for ${probationObj.name}`,
+                    to_email: user.email,
+                    manager_email: user.email,
+                    employee_name: probationObj.name,
+                    employee_id: probationObj.employee_id,
+                    manager: managerName,
+                    reviewed_date: probationObj.date_of_review,
+                    comments: `This probation evaluation review has been cancelled or deleted from the database.`
+                };
+                emailjs.send(
+                    import.meta.env.VITE_EMAILJS_SERVICEKEY,
+                    import.meta.env.VITE_EMAILJS_TEMPLATEID,
+                    templateParams,
+                    import.meta.env.VITE_EMAILJS_PUBLICKEY
+                ).catch(err => console.error("Email send failed:", err));
+            }
+            
             fetchManagerProbations(user.employee_id);
         } catch (err) {
             console.error("Error deleting probation:", err);
@@ -306,7 +350,7 @@ function ManagerDashboard() {
                                                     <button className="action-btn export-btn" onClick={() => exportAppraisalToPDF(appraisal)}>
                                                         Export
                                                     </button>
-                                                    <button className="action-btn delete-btn" onClick={() => handleDeleteAppraisal(appraisal.review_id)} style={{ backgroundColor: '#F44336' }}>
+                                                    <button className="action-btn delete-btn" onClick={() => handleDeleteAppraisal(appraisal.review_id, appraisal)} style={{ backgroundColor: '#F44336' }}>
                                                         Delete
                                                     </button>
                                                 </div>
@@ -329,7 +373,7 @@ function ManagerDashboard() {
                                                 </button>
                                                 <button 
                                                     className="action-btn delete-btn"
-                                                    onClick={() => handleDeleteAppraisal(appraisal.review_id)}
+                                                    onClick={() => handleDeleteAppraisal(appraisal.review_id, appraisal)}
                                                     style={{ backgroundColor: '#F44336' }}
                                                 >
                                                     Delete
@@ -447,7 +491,7 @@ function ManagerDashboard() {
                                             </button>
                                             <button 
                                                 className="action-btn delete-btn"
-                                                onClick={() => handleDeleteProbation(probation.probation_id)}
+                                                onClick={() => handleDeleteProbation(probation.probation_id, probation)}
                                                 style={{ backgroundColor: '#F44336' }}
                                             >
                                                 Delete
