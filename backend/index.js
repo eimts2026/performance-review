@@ -82,6 +82,10 @@ app.post("/login", (req, res) => {
         if(data.length === 0) return res.status(401).json("Invalid credentials")
         
         const user = data[0];
+        if (user.role !== 'HR' && user.role !== 'CEO' && user.role !== 'manager') {
+            return res.status(403).json("Access denied: Only HR, CEO, and Managers are allowed to log in.");
+        }
+        
         return res.json({
             employee_id: user.employee_id,
             first_name: user.first_name,

@@ -68,52 +68,72 @@
     gap: 30px;
 }
 
-.appraisal-card,
-.probation-card {
-    background: white;
+.appraisal-card {
+    background: #f8f9fa;
+    border-left: 4px solid #50c878; /* green completed accent */
+    padding: 1.5rem;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    padding: 25px;
-    border-left: 5px solid #2196F3;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
 }
 
-.appraisal-header,
-.probation-header {
-    margin-bottom: 20px;
+.appraisal-card.pending-card {
+    border-left: 4px solid #ec9a29; /* amber pending accent */
+}
+
+.appraisal-card:hover {
+    box-shadow: 0 4px 16px rgba(80, 200, 120, 0.15);
+    transform: translateY(-2px);
+}
+
+.appraisal-card.pending-card:hover {
+    box-shadow: 0 4px 16px rgba(236, 154, 41, 0.15);
+}
+
+.appraisal-header {
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.appraisal-header h3,
-.probation-header h3 {
+.appraisal-header h3 {
     margin: 0;
-    color: #333;
-    font-size: 1.5rem;
+    color: #1a1a1a;
+    font-size: 1.3rem;
 }
 
-.position,
-.role {
-    background: #f0f0f0;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    color: #666;
+.employee-id {
+    display: inline-block;
+    background: #50c878;
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
 }
 
-.appraisal-info,
-.probation-info {
-    margin-bottom: 20px;
-    padding: 15px;
-    background: #f9f9f9;
-    border-radius: 6px;
+.employee-id.pending-id {
+    background: #ec9a29;
 }
 
-.appraisal-info p,
-.probation-info p {
-    margin: 8px 0;
-    color: #555;
+.appraisal-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.appraisal-details p {
+    margin: 0;
     font-size: 0.95rem;
+    color: #555;
+}
+
+.appraisal-details strong {
+    color: #1a1a1a;
 }
 
 .ratings-section,

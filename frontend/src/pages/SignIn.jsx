@@ -40,7 +40,12 @@ function SignIn() {
                 setLoading(false)
                 navigate('/')
             } else {
-                setError("Invalid credentials. Please try again.")
+                let errMsg = "Invalid credentials. Please try again.";
+                try {
+                    const errData = await response.json();
+                    if (typeof errData === 'string') errMsg = errData;
+                } catch (_) {}
+                setError(errMsg)
                 setLoading(false)
             }
         } catch (error) {
