@@ -40,6 +40,9 @@ function ProbationForm() {
     const [successMessage, setSuccessMessage] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
 
+    const [probationId, setProbationId] = useState(null)
+    const [isEditMode, setIsEditMode] = useState(false)
+
     const [probation, setProbation] = useState({
         employee_id: "",
         name: "",
@@ -68,9 +71,49 @@ function ProbationForm() {
         const userData = JSON.parse(storedUser)
         setUser(userData)
         
+        const query = new URLSearchParams(window.location.search);
+        const pId = query.get('probation_id');
+        if (pId) {
+            setProbationId(pId);
+            setIsEditMode(true);
+            fetchProbationDetails(pId);
+        }
+        
         fetchEmployees();
         fetchManagers();
-    }, [])
+    }, [navigate])
+
+    async function fetchProbationDetails(pId) {
+        try {
+            const response = await fetch(`http://localhost:8800/probation/${pId}`);
+            if (response.ok) {
+                const data = await response.json();
+                setProbation({
+                    employee_id: data.employee_id || "",
+                    name: data.name || "",
+                    department: data.department || "",
+                    role: data.role || "",
+                    date_of_joining: data.date_of_joining ? data.date_of_joining.slice(0, 10) : "",
+                    date_of_review: data.date_of_review ? data.date_of_review.slice(0, 10) : "",
+                    department_head: data.department_head || "",
+                    functional_technical_skills: data.functional_technical_skills !== null ? String(data.functional_technical_skills) : "",
+                    result_orientation: data.result_orientation !== null ? String(data.result_orientation) : "",
+                    creativity_innovation: data.creativity_innovation !== null ? String(data.creativity_innovation) : "",
+                    communication: data.communication !== null ? String(data.communication) : "",
+                    teamwork: data.teamwork !== null ? String(data.teamwork) : "",
+                    adaptability: data.adaptability !== null ? String(data.adaptability) : "",
+                    supervisory_managerial: data.supervisory_managerial !== null ? String(data.supervisory_managerial) : "",
+                    appraisers_comments: data.appraisers_comments || ""
+                });
+            } else {
+                console.error("Failed to fetch probation details");
+                setErrorMessage("Failed to load probation record.");
+            }
+        } catch (error) {
+            console.error("Error fetching probation details:", error);
+            setErrorMessage("Error loading probation details.");
+        }
+    }
 
     async function fetchEmployees() {
         try {
@@ -135,7 +178,8 @@ function ProbationForm() {
         }))
     }
 
-    const sendEmail = () => {
+    const sendEmail = (newProbationId) => {
+        const idToUse = newProbationId || probationId;
         const selectedManager = managers.find(mgr => mgr.employee_id == probation.department_head);
         const managerName = selectedManager ? selectedManager.first_name + ' ' + selectedManager.last_name : '';
         const managerEmail = selectedManager ? selectedManager.email : '';
@@ -151,7 +195,8 @@ function ProbationForm() {
             role: probation.role,
             date_of_review: probation.date_of_review,
             manager: managerName,
-            appraisers_comments: probation.appraisers_comments
+            appraisers_comments: probation.appraisers_comments,
+            form_url: window.location.origin + `/probation?probation_id=${idToUse}`
         };
 
         emailjs.send(
@@ -172,40 +217,63 @@ function ProbationForm() {
         setSuccessMessage("")
         setErrorMessage("")
 
+        const url = isEditMode ? `http://localhost:8800/probation/${probationId}` : "http://localhost:8800/probation";
+        const method = isEditMode ? "PUT" : "POST";
+
+        // Clean rating fields
+        const cleanedProbation = { ...probation };
+        const ratingFields = [
+            "functional_technical_skills", "result_orientation", "creativity_innovation", 
+            "communication", "teamwork", "adaptability", "supervisory_managerial"
+        ];
+        ratingFields.forEach(field => {
+            if (cleanedProbation[field] === "") {
+                cleanedProbation[field] = null;
+            } else {
+                cleanedProbation[field] = Number(cleanedProbation[field]);
+            }
+        });
+
         // Submit to database
         try {
-            const response = await fetch("http://localhost:8800/probation", {
-                method: "POST",
+            const response = await fetch(url, {
+                method: method,
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(probation)
+                body: JSON.stringify(cleanedProbation)
             })
             const data = await response.json();
             
             if(response.ok) {
-                sendEmail();
-                setSuccessMessage("Probation form submitted successfully!");
-                setProbation({
-                    employee_id: "",
-                    name: "",
-                    department: "",
-                    role: "",
-                    date_of_joining: "",
-                    date_of_review: new Date().toISOString().slice(0, 10),
-                    department_head: "",
-                    functional_technical_skills: "",
-                    result_orientation: "",
-                    creativity_innovation: "",
-                    communication: "",
-                    teamwork: "",
-                    adaptability: "",
-                    supervisory_managerial: "",
-                    appraisers_comments: ""
-                })
-                setTimeout(() => setSuccessMessage(""), 5000)
+                if (isEditMode) {
+                    setSuccessMessage("Probation form updated successfully!");
+                    alert("Probation record updated successfully!");
+                    navigate(-1);
+                } else {
+                    sendEmail(data.probation_id);
+                    setSuccessMessage("Probation form submitted successfully!");
+                    setProbation({
+                        employee_id: "",
+                        name: "",
+                        department: "",
+                        role: "",
+                        date_of_joining: "",
+                        date_of_review: new Date().toISOString().slice(0, 10),
+                        department_head: "",
+                        functional_technical_skills: "",
+                        result_orientation: "",
+                        creativity_innovation: "",
+                        communication: "",
+                        teamwork: "",
+                        adaptability: "",
+                        supervisory_managerial: "",
+                        appraisers_comments: ""
+                    })
+                    setTimeout(() => setSuccessMessage(""), 5000)
+                }
             } else {
-                setErrorMessage(data?.sqlMessage || "Failed to submit probation form.");
+                setErrorMessage(data?.message || data?.sqlMessage || "Failed to submit probation form.");
             }
         } catch (error) {
             console.log("Error submitting form:", error);
@@ -229,7 +297,7 @@ function ProbationForm() {
                     <div className='form-grid'>
                         {/* Employee Dropdown */}
                         <label htmlFor="employee-select">Select Employee:</label>
-                        <select id="employee-select" value={probation.employee_id} onChange={handleEmployeeChange} required>
+                        <select id="employee-select" value={probation.employee_id} onChange={handleEmployeeChange} required disabled={isEditMode}>
                             <option value="">-- Select an Employee --</option>
                             {employees.map((emp) => (
                                 <option key={emp.employee_id} value={emp.employee_id}>

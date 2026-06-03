@@ -271,27 +271,28 @@ function MainForm() {
 
             const data = await response.json();
             console.log("Data saved to database:", data);
-            return true;
+            return { success: true, review_id: data.review_id || reviewId };
         } catch (error) {
             console.log("Error saving to database:", error);
-            return false;
+            return { success: false };
         }
     }
 
     // Send for Review (HR only - saves HR section)
     const handleSendForReview = async (e) => {
         e.preventDefault();
-        const dbSaved = await saveToDatabase();
-        if(dbSaved) {
+        const dbResult = await saveToDatabase();
+        if(dbResult.success) {
             setSentForReview(true);
-            sendEmail();
+            sendEmail(dbResult.review_id);
             alert("Appraisal sent for review to manager!");
         } else {
             alert("Error saving appraisal. Please try again.");
         }
     }
 
-    const sendEmail = () => {
+    const sendEmail = (newReviewId) => {
+        const idToUse = newReviewId || reviewId;
         const templateParams = {
             name: appraisal.manager,
             title: `Performance Appraisal for ${appraisal.employee_name} (${appraisal.position})`,
@@ -302,7 +303,8 @@ function MainForm() {
             employee_id: appraisal.employee_id,
             manager: appraisal.manager,
             reviewed_date: appraisal.reviewed_date,
-            comments: appraisal.comments
+            comments: appraisal.comments,
+            form_url: window.location.origin + `/form?review_id=${idToUse}`
         };
 
         emailjs.send(
@@ -321,8 +323,8 @@ function MainForm() {
     // Handle form submission - save to DB and send email
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const dbSaved = await saveToDatabase();
-        if(dbSaved) {
+        const dbResult = await saveToDatabase();
+        if(dbResult.success) {
             alert("Appraisal completed successfully!");
             navigate('/');
         } else {

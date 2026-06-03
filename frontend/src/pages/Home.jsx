@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from "axios"
-import './Home.css'
+import axios from "axios";
+import './Home.css';
+import { exportAppraisalToPDF, exportProbationToPDF } from '../components/ExportPDF';
 
 const uses = [
     {id: 1, name: 'Apply Appraisal', link: '/form'},
@@ -9,11 +10,40 @@ const uses = [
 ]
 
 function Home() {
-    
     const [users, setUsers] = useState([])
     const [appraisals, setAppraisals] = useState([])
+    const [probations, setProbations] = useState([])
     const [searchQuery, setSearchQuery] = useState("")
+    const [activeTab, setActiveTab] = useState("appraisals")
     const navigate = useNavigate();
+
+    async function handleDeleteAppraisal(reviewId) {
+        if (!window.confirm("Are you sure you want to delete this appraisal record from the entire database?")) {
+            return;
+        }
+        try {
+            await axios.delete(`http://localhost:8800/appraisals/${reviewId}`);
+            alert("Appraisal record deleted successfully.");
+            fetchRecentAppraisals();
+        } catch (err) {
+            console.error("Error deleting appraisal:", err);
+            alert("Failed to delete appraisal record.");
+        }
+    }
+
+    async function handleDeleteProbation(probationId) {
+        if (!window.confirm("Are you sure you want to delete this probation record from the entire database?")) {
+            return;
+        }
+        try {
+            await axios.delete(`http://localhost:8800/probation/${probationId}`);
+            alert("Probation record deleted successfully.");
+            fetchAllProbations();
+        } catch (err) {
+            console.error("Error deleting probation:", err);
+            alert("Failed to delete probation record.");
+        }
+    }
 
     useEffect(() => {
         // Check if user is logged in
@@ -45,6 +75,7 @@ function Home() {
 
         fetchAllUsers();
         fetchRecentAppraisals();
+        fetchAllProbations();
     }, [navigate])
 
     async function fetchAllUsers() {
@@ -76,6 +107,22 @@ function Home() {
         }
     }
 
+    async function fetchAllProbations() {
+        try {
+            const res = await axios.get("http://localhost:8800/probation")
+            if (Array.isArray(res.data)) {
+                setProbations(res.data)
+            } else {
+                console.error("Probations response is not an array:", res.data)
+                setProbations([])
+            }
+        } catch (err) {
+            console.log(err)
+            setProbations([])
+        }
+    }
+
+    // Appraisals segregation
     const completedAppraisals = Array.isArray(appraisals) 
         ? appraisals.filter(
             appraisal => typeof appraisal.job_knowledge_rating === 'string' && appraisal.job_knowledge_rating.trim() !== ""
@@ -110,6 +157,37 @@ function Home() {
         );
     });
 
+    // Probations segregation
+    const pendingProbations = Array.isArray(probations)
+        ? probations.filter(p => p.functional_technical_skills === null || p.functional_technical_skills === "")
+        : [];
+
+    const completedProbations = Array.isArray(probations)
+        ? probations.filter(p => p.functional_technical_skills !== null && p.functional_technical_skills !== "")
+        : [];
+
+    const filteredPendingProbations = pendingProbations.filter(probation => {
+        const query = searchQuery.toLowerCase().trim();
+        if (query === "") return true;
+        return (
+            probation.name.toLowerCase().includes(query) ||
+            probation.employee_id.toLowerCase().includes(query) ||
+            (probation.role && probation.role.toLowerCase().includes(query)) ||
+            (probation.department && probation.department.toLowerCase().includes(query))
+        );
+    });
+
+    const filteredCompletedProbations = completedProbations.filter(probation => {
+        const query = searchQuery.toLowerCase().trim();
+        if (query === "") return true;
+        return (
+            probation.name.toLowerCase().includes(query) ||
+            probation.employee_id.toLowerCase().includes(query) ||
+            (probation.role && probation.role.toLowerCase().includes(query)) ||
+            (probation.department && probation.department.toLowerCase().includes(query))
+        );
+    });
+
     return (
         <>
             <section className="home-section">
@@ -124,11 +202,27 @@ function Home() {
                     ))}
                 </div>
 
+                {/* Tabs Selection */}
+                <div className="tabs">
+                    <button 
+                        className={`tab-button ${activeTab === 'appraisals' ? 'active' : ''}`}
+                        onClick={() => { setActiveTab('appraisals'); setSearchQuery(""); }}
+                    >
+                        Appraisals ({appraisals.length})
+                    </button>
+                    <button 
+                        className={`tab-button ${activeTab === 'probations' ? 'active' : ''}`}
+                        onClick={() => { setActiveTab('probations'); setSearchQuery(""); }}
+                    >
+                        Probations ({probations.length})
+                    </button>
+                </div>
+
                 {/* Search Bar */}
-                <div className="search-container" style={{ maxWidth: '1200px', margin: '3rem auto 0 auto', padding: '0 2rem' }}>
+                <div className="search-container" style={{ maxWidth: '1200px', margin: '1.5rem auto 0 auto', padding: '0 2rem' }}>
                     <input 
                         type="text" 
-                        placeholder="Search by employee name, ID, position, or manager..." 
+                        placeholder={`Search by employee name, ID, or ${activeTab === 'appraisals' ? 'position/manager' : 'department/role'}...`}
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         style={{
@@ -145,55 +239,187 @@ function Home() {
                     />
                 </div>
 
-                {/* Pending Appraisals Section */}
-                <div className="recent-appraisals pending-section">
-                    <h2>Pending Appraisals (Awaiting Manager Review)</h2>
-                    {filteredPending.length > 0 ? (
-                        <div className="appraisals-list">
-                            {filteredPending.map((appraisal, index) => (
-                                <div key={index} className="appraisal-card pending-card">
-                                    <div className="appraisal-header">
-                                        <h3>{appraisal.employee_name}</h3>
-                                        <span className="employee-id pending-id">ID: {appraisal.employee_id}</span>
-                                    </div>
-                                    <div className="appraisal-details">
-                                        <p><strong>Position:</strong> {appraisal.position}</p>
-                                        <p><strong>Manager:</strong> {appraisal.manager}</p>
-                                        <p><strong>Sent for Review:</strong> {new Date(appraisal.reviewed_date).toLocaleDateString()}</p>
-                                        <p><strong>Appraiser:</strong> {appraisal.appraiser_name}</p>
-                                    </div>
+                {activeTab === 'appraisals' ? (
+                    <>
+                        {/* Pending Appraisals Section */}
+                        <div className="recent-appraisals pending-section">
+                            <h2>Pending Appraisals (Awaiting Manager Review)</h2>
+                            {filteredPending.length > 0 ? (
+                                <div className="appraisals-list">
+                                    {filteredPending.map((appraisal, index) => (
+                                        <div key={index} className="appraisal-card pending-card">
+                                            <div className="appraisal-header">
+                                                <h3>{appraisal.employee_name}</h3>
+                                                <span className="employee-id pending-id">ID: {appraisal.employee_id}</span>
+                                            </div>
+                                            <div className="appraisal-details">
+                                                <p><strong>Position:</strong> {appraisal.position}</p>
+                                                <p><strong>Manager:</strong> {appraisal.manager}</p>
+                                                <p><strong>Sent for Review:</strong> {new Date(appraisal.reviewed_date).toLocaleDateString()}</p>
+                                                <p><strong>Appraiser:</strong> {appraisal.appraiser_name}</p>
+                                            </div>
+                                            <div className="action-buttons" style={{ display: 'flex', gap: '8px', marginTop: '1rem', borderTop: '1px solid #e5e7eb', paddingTop: '0.75rem' }}>
+                                                <button 
+                                                    className="action-btn edit-btn" 
+                                                    onClick={() => navigate(`/form?review_id=${appraisal.review_id}`)}
+                                                    style={{ flex: 1, padding: '6px 12px', background: '#ec9a29', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
+                                                >
+                                                    View/Edit
+                                                </button>
+                                                <button 
+                                                    className="action-btn delete-btn" 
+                                                    onClick={() => handleDeleteAppraisal(appraisal.review_id)}
+                                                    style={{ flex: 1, padding: '6px 12px', background: '#F44336', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
+                                                >
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
-                            ))}
+                            ) : (
+                                <p className="no-appraisals">No pending appraisals found</p>
+                            )}
                         </div>
-                    ) : (
-                        <p className="no-appraisals">No pending appraisals found</p>
-                    )}
-                </div>
 
-                {/* Recent Appraisals Section */}
-                <div className="recent-appraisals">
-                    <h2>Recent Appraisals Completed</h2>
-                    {filteredCompleted.length > 0 ? (
-                        <div className="appraisals-list">
-                            {filteredCompleted.slice(0, 5).map((appraisal, index) => (
-                                <div key={index} className="appraisal-card">
-                                    <div className="appraisal-header">
-                                        <h3>{appraisal.employee_name}</h3>
-                                        <span className="employee-id">ID: {appraisal.employee_id}</span>
-                                    </div>
-                                    <div className="appraisal-details">
-                                        <p><strong>Position:</strong> {appraisal.position}</p>
-                                        <p><strong>Manager:</strong> {appraisal.manager}</p>
-                                        <p><strong>Review Date:</strong> {new Date(appraisal.reviewed_date).toLocaleDateString()}</p>
-                                        <p><strong>Appraiser:</strong> {appraisal.appraiser_name}</p>
-                                    </div>
+                        {/* Recent Appraisals Section */}
+                        <div className="recent-appraisals">
+                            <h2>Recent Appraisals Completed</h2>
+                            {filteredCompleted.length > 0 ? (
+                                <div className="appraisals-list">
+                                    {filteredCompleted.map((appraisal, index) => (
+                                        <div key={index} className="appraisal-card">
+                                            <div className="appraisal-header">
+                                                <h3>{appraisal.employee_name}</h3>
+                                                <span className="employee-id">ID: {appraisal.employee_id}</span>
+                                            </div>
+                                            <div className="appraisal-details">
+                                                <p><strong>Position:</strong> {appraisal.position}</p>
+                                                <p><strong>Manager:</strong> {appraisal.manager}</p>
+                                                <p><strong>Review Date:</strong> {new Date(appraisal.reviewed_date).toLocaleDateString()}</p>
+                                                <p><strong>Appraiser:</strong> {appraisal.appraiser_name}</p>
+                                            </div>
+                                            <div className="action-buttons" style={{ display: 'flex', gap: '8px', marginTop: '1rem', borderTop: '1px solid #e5e7eb', paddingTop: '0.75rem' }}>
+                                                <button 
+                                                    className="action-btn edit-btn" 
+                                                    onClick={() => navigate(`/form?review_id=${appraisal.review_id}`)}
+                                                    style={{ flex: 1, padding: '6px 12px', background: '#ec9a29', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
+                                                >
+                                                    View/Edit
+                                                </button>
+                                                <button 
+                                                    className="action-btn export-btn" 
+                                                    onClick={() => exportAppraisalToPDF(appraisal)}
+                                                    style={{ flex: 1, padding: '6px 12px', background: '#2196F3', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
+                                                >
+                                                    Export
+                                                </button>
+                                                <button 
+                                                    className="action-btn delete-btn" 
+                                                    onClick={() => handleDeleteAppraisal(appraisal.review_id)}
+                                                    style={{ flex: 1, padding: '6px 12px', background: '#F44336', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
+                                                >
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
-                            ))}
+                            ) : (
+                                <p className="no-appraisals">No appraisals completed yet</p>
+                            )}
                         </div>
-                    ) : (
-                        <p className="no-appraisals">No appraisals completed yet</p>
-                    )}
-                </div>
+                    </>
+                ) : (
+                    <>
+                        {/* Pending Probations Section */}
+                        <div className="recent-appraisals pending-section">
+                            <h2>Pending Probations (Awaiting Manager Review)</h2>
+                            {filteredPendingProbations.length > 0 ? (
+                                <div className="appraisals-list">
+                                    {filteredPendingProbations.map((probation, index) => (
+                                        <div key={index} className="appraisal-card pending-card">
+                                            <div className="appraisal-header">
+                                                <h3>{probation.name}</h3>
+                                                <span className="employee-id pending-id">ID: {probation.employee_id}</span>
+                                            </div>
+                                            <div className="appraisal-details">
+                                                <p><strong>Department:</strong> {probation.department}</p>
+                                                <p><strong>Role:</strong> {probation.role}</p>
+                                                <p><strong>Review Date:</strong> {new Date(probation.date_of_review).toLocaleDateString()}</p>
+                                            </div>
+                                            <div className="action-buttons" style={{ display: 'flex', gap: '8px', marginTop: '1rem', borderTop: '1px solid #e5e7eb', paddingTop: '0.75rem' }}>
+                                                <button 
+                                                    className="action-btn edit-btn" 
+                                                    onClick={() => navigate(`/probation?probation_id=${probation.probation_id}`)}
+                                                    style={{ flex: 1, padding: '6px 12px', background: '#ec9a29', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
+                                                >
+                                                    View/Edit
+                                                </button>
+                                                <button 
+                                                    className="action-btn delete-btn" 
+                                                    onClick={() => handleDeleteProbation(probation.probation_id)}
+                                                    style={{ flex: 1, padding: '6px 12px', background: '#F44336', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
+                                                >
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <p className="no-appraisals">No pending probations found</p>
+                            )}
+                        </div>
+
+                        {/* Recent Probations Section */}
+                        <div className="recent-appraisals">
+                            <h2>Recent Probations Completed</h2>
+                            {filteredCompletedProbations.length > 0 ? (
+                                <div className="appraisals-list">
+                                    {filteredCompletedProbations.map((probation, index) => (
+                                        <div key={index} className="appraisal-card">
+                                            <div className="appraisal-header">
+                                                <h3>{probation.name}</h3>
+                                                <span className="employee-id">ID: {probation.employee_id}</span>
+                                            </div>
+                                            <div className="appraisal-details">
+                                                <p><strong>Department:</strong> {probation.department}</p>
+                                                <p><strong>Role:</strong> {probation.role}</p>
+                                                <p><strong>Review Date:</strong> {new Date(probation.date_of_review).toLocaleDateString()}</p>
+                                            </div>
+                                            <div className="action-buttons" style={{ display: 'flex', gap: '8px', marginTop: '1rem', borderTop: '1px solid #e5e7eb', paddingTop: '0.75rem' }}>
+                                                <button 
+                                                    className="action-btn edit-btn" 
+                                                    onClick={() => navigate(`/probation?probation_id=${probation.probation_id}`)}
+                                                    style={{ flex: 1, padding: '6px 12px', background: '#ec9a29', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
+                                                >
+                                                    View/Edit
+                                                </button>
+                                                <button 
+                                                    className="action-btn export-btn" 
+                                                    onClick={() => exportProbationToPDF(probation)}
+                                                    style={{ flex: 1, padding: '6px 12px', background: '#2196F3', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
+                                                >
+                                                    Export
+                                                </button>
+                                                <button 
+                                                    className="action-btn delete-btn" 
+                                                    onClick={() => handleDeleteProbation(probation.probation_id)}
+                                                    style={{ flex: 1, padding: '6px 12px', background: '#F44336', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
+                                                >
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <p className="no-appraisals">No completed probations found</p>
+                            )}
+                        </div>
+                    </>
+                )}
             </section>
         </>
     );

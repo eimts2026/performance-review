@@ -11,11 +11,14 @@ app.use(express.json())
 app.use(cors())
 
 // initialisation 
-const db = mysql.createConnection({
+const db = mysql.createPool({
     host: process.env.DB_SQL_HOST,
     user: process.env.DB_SQL_USER,
     password: process.env.DB_SQL_PASSWORD,
-    database: process.env.DB_SQL_DATABASE_NAME
+    database: process.env.DB_SQL_DATABASE_NAME,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
 })
 
 // Response to showing now you're in the backend
@@ -170,6 +173,19 @@ app.put("/appraisals/:review_id", (req, res) => {
     });
 });
 
+// Delete a single appraisal by review_id
+app.delete("/appraisals/:review_id", (req, res) => {
+    const { review_id } = req.params;
+    const q = "DELETE FROM appraisals WHERE review_id = ?";
+    db.query(q, [review_id], (err, data) => {
+        if(err) {
+            console.error("Error deleting appraisal:", err);
+            return res.status(500).json({ error: "Failed to delete appraisal", details: err.message });
+        }
+        return res.json("Appraisal deleted successfully");
+    });
+});
+
 // Adding appraisal data to database (Send for Review)
 app.post("/appraisals", (req, res) => {
     const { appraiser_name, employee_id, employee_name, position, review_period, date_joined, reviewed_date, manager, manager_email, attendance_rating, punctuality_rating, compliance_rating, engagement_rating, qualification_rating, comments, job_knowledge_rating, achieved_kpis_rating, work_quality_rating, initiative_rating, time_management_rating, accurate_records_rating, team_work_rating, organizing_planning_rating, work_attitude_rating, kpis_for_this_year, employee_comments_problems } = req.body;
@@ -210,7 +226,7 @@ app.post("/appraisals", (req, res) => {
         // You can add email sending logic here using nodemailer or similar
         console.log(`Email would be sent to ${manager_email} with content:`, emailContent);
         
-        return res.json("appraisal created successfully")
+        return res.json({ message: "appraisal created successfully", review_id: data.insertId });
     })
 })
 
@@ -261,16 +277,106 @@ app.post("/probation", (req, res) => {
             console.error("Error inserting probation record:", err);
             return res.status(500).json(err);
         }
-        return res.json("probation record created successfully")
+        return res.json({ message: "probation record created successfully", probation_id: data.insertId });
     })
 })
+
+// Get all probation records (for HR / CEO dashboard)
+app.get("/probation", (req, res) => {
+    const q = "SELECT * FROM probation ORDER BY date_of_review DESC";
+    db.query(q, (err, data) => {
+        if(err) {
+            console.error("Error fetching all probations:", err);
+            return res.status(500).json(err);
+        }
+        return res.json(data);
+    });
+});
+
+// Get a single probation record by probation_id
+app.get("/probation/:probation_id", (req, res) => {
+    const { probation_id } = req.params;
+    const q = "SELECT * FROM probation WHERE probation_id = ?";
+    db.query(q, [probation_id], (err, data) => {
+        if(err) {
+            console.error("Error fetching probation details:", err);
+            return res.status(500).json(err);
+        }
+        if(data.length === 0) return res.status(404).json({ error: "Probation record not found" });
+        return res.json(data[0]);
+    });
+});
+
+// Updating probation record in database
+app.put("/probation/:probation_id", (req, res) => {
+    const { probation_id } = req.params;
+    const {
+        functional_technical_skills,
+        result_orientation,
+        creativity_innovation,
+        communication,
+        teamwork,
+        adaptability,
+        supervisory_managerial,
+        appraisers_comments,
+        date_of_review
+    } = req.body;
+
+    const finalDateOfReview = date_of_review || new Date().toISOString().slice(0, 10);
+
+    const q = `UPDATE probation SET 
+        functional_technical_skills = ?, 
+        result_orientation = ?, 
+        creativity_innovation = ?, 
+        communication = ?, 
+        teamwork = ?, 
+        adaptability = ?, 
+        supervisory_managerial = ?, 
+        appraisers_comments = ?,
+        date_of_review = ?
+        WHERE probation_id = ?`;
+
+    const values = [
+        nullIfEmpty(functional_technical_skills),
+        nullIfEmpty(result_orientation),
+        nullIfEmpty(creativity_innovation),
+        nullIfEmpty(communication),
+        nullIfEmpty(teamwork),
+        nullIfEmpty(adaptability),
+        nullIfEmpty(supervisory_managerial),
+        appraisers_comments,
+        finalDateOfReview,
+        probation_id
+    ];
+
+    db.query(q, values, (err, data) => {
+        if(err) {
+            console.error("Error updating probation record:", err);
+            return res.status(500).json(err);
+        }
+        return res.json("probation record updated successfully");
+    });
+});
+
+// Delete a single probation record by probation_id
+app.delete("/probation/:probation_id", (req, res) => {
+    const { probation_id } = req.params;
+    const q = "DELETE FROM probation WHERE probation_id = ?";
+    db.query(q, [probation_id], (err, data) => {
+        if(err) {
+            console.error("Error deleting probation record:", err);
+            return res.status(500).json({ error: "Failed to delete probation record", details: err.message });
+        }
+        return res.json("Probation record deleted successfully");
+    });
+});
 
 // Get probations for a specific manager (RBAC - Manager Only)
 app.get("/probation/manager/:departmentHead", (req, res) => {
     const { departmentHead } = req.params;
     
-    // Query to get probation records where department_head matches
-    const q = "SELECT employee_id, name, department, role, date_of_joining, date_of_review, functional_technical_skills, result_orientation, creativity_innovation, communication, teamwork, adaptability, supervisory_managerial, appraisers_comments FROM probation WHERE department_head = ? ORDER BY date_of_review DESC";
+    // Query to get probation records where department_head matches, now selecting probation_id as well
+    const q = "SELECT probation_id, employee_id, name, department, role, date_of_joining, date_of_review, functional_technical_skills, result_orientation, creativity_innovation, communication, teamwork, adaptability, supervisory_managerial, appraisers_comments FROM probation WHERE department_head = ? ORDER BY date_of_review DESC";
     
     db.query(q, [departmentHead], (err, data) => {
         if(err) return res.status(500).json(err)

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './ManagerDashboard.css';
+import { exportAppraisalToPDF, exportProbationToPDF } from '../components/ExportPDF';
 
 function ManagerDashboard() {
     const [user, setUser] = useState(null);
@@ -11,7 +12,43 @@ function ManagerDashboard() {
     const [loadingProbations, setLoadingProbations] = useState(true);
     const [activeTab, setActiveTab] = useState('appraisals');
     const [searchQuery, setSearchQuery] = useState("");
+    const [expandedCards, setExpandedCards] = useState({});
     const navigate = useNavigate();
+
+    const toggleExpandCard = (cardKey) => {
+        setExpandedCards(prev => ({
+            ...prev,
+            [cardKey]: !prev[cardKey]
+        }));
+    };
+
+    const handleDeleteAppraisal = async (reviewId) => {
+        if (!window.confirm("Are you sure you want to delete this appraisal record from the entire database?")) {
+            return;
+        }
+        try {
+            await axios.delete(`http://localhost:8800/appraisals/${reviewId}`);
+            alert("Appraisal record deleted successfully.");
+            fetchManagerAppraisals(user.first_name + " " + user.last_name);
+        } catch (err) {
+            console.error("Error deleting appraisal:", err);
+            alert("Failed to delete appraisal record.");
+        }
+    };
+
+    const handleDeleteProbation = async (probationId) => {
+        if (!window.confirm("Are you sure you want to delete this probation record from the entire database?")) {
+            return;
+        }
+        try {
+            await axios.delete(`http://localhost:8800/probation/${probationId}`);
+            alert("Probation record deleted successfully.");
+            fetchManagerProbations(user.employee_id);
+        } catch (err) {
+            console.error("Error deleting probation:", err);
+            alert("Failed to delete probation record.");
+        }
+    };
 
     useEffect(() => {
         // Check if user is logged in
@@ -166,6 +203,7 @@ function ManagerDashboard() {
                         <div className="appraisals-list">
                             {filteredAppraisals.map((appraisal, idx) => {
                                 const isPending = !appraisal.job_knowledge_rating || appraisal.job_knowledge_rating.trim() === "";
+                                const isExpanded = !!expandedCards[`appraisal_${appraisal.review_id}`];
                                 return (
                                     <div key={idx} className={`appraisal-card ${isPending ? 'pending-card' : ''}`}>
                                         <div className="appraisal-header">
@@ -184,81 +222,117 @@ function ManagerDashboard() {
 
                                         {!isPending && (
                                             <>
-                                                <div className="ratings-section" style={{ marginTop: '1.5rem' }}>
-                                                    <h4>Performance Ratings</h4>
-                                                    <div className="ratings-grid">
-                                                        <div className="rating-item">
-                                                            <span className="rating-label">Job Knowledge</span>
-                                                            <RatingBadge rating={appraisal.job_knowledge_rating} />
-                                                        </div>
-                                                        <div className="rating-item">
-                                                            <span className="rating-label">Achieved KPIs</span>
-                                                            <RatingBadge rating={appraisal.achieved_kpis_rating} />
-                                                        </div>
-                                                        <div className="rating-item">
-                                                            <span className="rating-label">Work Quality</span>
-                                                            <RatingBadge rating={appraisal.work_quality_rating} />
-                                                        </div>
-                                                        <div className="rating-item">
-                                                            <span className="rating-label">Initiative</span>
-                                                            <RatingBadge rating={appraisal.initiative_rating} />
-                                                        </div>
-                                                        <div className="rating-item">
-                                                            <span className="rating-label">Time Management</span>
-                                                            <RatingBadge rating={appraisal.time_management_rating} />
-                                                        </div>
-                                                        <div className="rating-item">
-                                                            <span className="rating-label">Accurate Records</span>
-                                                            <RatingBadge rating={appraisal.accurate_records_rating} />
-                                                        </div>
-                                                        <div className="rating-item">
-                                                            <span className="rating-label">Team Work</span>
-                                                            <RatingBadge rating={appraisal.team_work_rating} />
-                                                        </div>
-                                                        <div className="rating-item">
-                                                            <span className="rating-label">Organizing/Planning</span>
-                                                            <RatingBadge rating={appraisal.organizing_planning_rating} />
-                                                        </div>
-                                                        <div className="rating-item">
-                                                            <span className="rating-label">Work Attitude</span>
-                                                            <RatingBadge rating={appraisal.work_attitude_rating} />
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                <button 
+                                                    className="action-btn details-toggle-btn"
+                                                    onClick={() => toggleExpandCard(`appraisal_${appraisal.review_id}`)}
+                                                    style={{
+                                                        backgroundColor: 'transparent',
+                                                        color: '#2196F3',
+                                                        border: '1px solid #2196F3',
+                                                        padding: '6px 12px',
+                                                        borderRadius: '4px',
+                                                        fontSize: '0.85rem',
+                                                        fontWeight: 'bold',
+                                                        cursor: 'pointer',
+                                                        marginBottom: '1rem',
+                                                        width: '100%',
+                                                        transition: 'all 0.2s'
+                                                    }}
+                                                >
+                                                    {isExpanded ? 'Hide Assessment Details ▲' : 'View Assessment Details ▼'}
+                                                </button>
 
-                                                <div className="comments-section">
-                                                    <div className="comment-block">
-                                                        <h5>KPIs for This Year</h5>
-                                                        <p>{appraisal.kpis_for_this_year || 'N/A'}</p>
+                                                {isExpanded && (
+                                                    <div className="collapsible-content">
+                                                        <div className="ratings-section" style={{ marginTop: '0.5rem' }}>
+                                                            <h4>Performance Ratings</h4>
+                                                            <div className="ratings-grid">
+                                                                <div className="rating-item">
+                                                                    <span className="rating-label">Job Knowledge</span>
+                                                                    <RatingBadge rating={appraisal.job_knowledge_rating} />
+                                                                </div>
+                                                                <div className="rating-item">
+                                                                    <span className="rating-label">Achieved KPIs</span>
+                                                                    <RatingBadge rating={appraisal.achieved_kpis_rating} />
+                                                                </div>
+                                                                <div className="rating-item">
+                                                                    <span className="rating-label">Work Quality</span>
+                                                                    <RatingBadge rating={appraisal.work_quality_rating} />
+                                                                </div>
+                                                                <div className="rating-item">
+                                                                    <span className="rating-label">Initiative</span>
+                                                                    <RatingBadge rating={appraisal.initiative_rating} />
+                                                                </div>
+                                                                <div className="rating-item">
+                                                                    <span className="rating-label">Time Management</span>
+                                                                    <RatingBadge rating={appraisal.time_management_rating} />
+                                                                </div>
+                                                                <div className="rating-item">
+                                                                    <span className="rating-label">Accurate Records</span>
+                                                                    <RatingBadge rating={appraisal.accurate_records_rating} />
+                                                                </div>
+                                                                <div className="rating-item">
+                                                                    <span className="rating-label">Team Work</span>
+                                                                    <RatingBadge rating={appraisal.team_work_rating} />
+                                                                </div>
+                                                                <div className="rating-item">
+                                                                    <span className="rating-label">Organizing/Planning</span>
+                                                                    <RatingBadge rating={appraisal.organizing_planning_rating} />
+                                                                </div>
+                                                                <div className="rating-item">
+                                                                    <span className="rating-label">Work Attitude</span>
+                                                                    <RatingBadge rating={appraisal.work_attitude_rating} />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="comments-section" style={{ marginBottom: '1rem' }}>
+                                                            <div className="comment-block">
+                                                                <h5>KPIs for This Year</h5>
+                                                                <p>{appraisal.kpis_for_this_year || 'N/A'}</p>
+                                                            </div>
+                                                            <div className="comment-block">
+                                                                <h5>Employee Comments/Problems</h5>
+                                                                <p>{appraisal.employee_comments_problems || 'N/A'}</p>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div className="comment-block">
-                                                        <h5>Employee Comments/Problems</h5>
-                                                        <p>{appraisal.employee_comments_problems || 'N/A'}</p>
-                                                    </div>
+                                                )}
+
+                                                <div className="action-buttons">
+                                                    <button className="action-btn edit-btn" onClick={() => navigate(`/form?review_id=${appraisal.review_id}`)}>
+                                                        Edit
+                                                    </button>
+                                                    <button className="action-btn export-btn" onClick={() => exportAppraisalToPDF(appraisal)}>
+                                                        Export
+                                                    </button>
+                                                    <button className="action-btn delete-btn" onClick={() => handleDeleteAppraisal(appraisal.review_id)} style={{ backgroundColor: '#F44336' }}>
+                                                        Delete
+                                                    </button>
                                                 </div>
                                             </>
                                         )}
-
+ 
                                         {isPending && (
-                                            <div style={{ marginTop: '1.5rem', textAlign: 'right' }}>
+                                            <div className="action-buttons">
                                                 <button 
-                                                    className="complete-review-action-btn"
+                                                    className="action-btn edit-btn"
                                                     onClick={() => navigate(`/form?review_id=${appraisal.review_id}`)}
-                                                    style={{
-                                                        backgroundColor: '#ec9a29',
-                                                        color: 'white',
-                                                        border: 'none',
-                                                        padding: '10px 20px',
-                                                        borderRadius: '6px',
-                                                        fontWeight: 'bold',
-                                                        cursor: 'pointer',
-                                                        boxShadow: '0 2px 4px rgba(236, 154, 41, 0.2)',
-                                                        transition: 'background-color 0.2s, transform 0.2s'
-                                                    }}
-                                                    onMouseOver={(e) => { e.target.style.backgroundColor = '#d3841a'; e.target.style.transform = 'translateY(-1px)'; }}
-                                                    onMouseOut={(e) => { e.target.style.backgroundColor = '#ec9a29'; e.target.style.transform = 'translateY(0)'; }}
                                                 >
                                                     Complete Review
+                                                </button>
+                                                <button 
+                                                    className="action-btn export-btn"
+                                                    onClick={() => exportAppraisalToPDF(appraisal)}
+                                                >
+                                                    Export
+                                                </button>
+                                                <button 
+                                                    className="action-btn delete-btn"
+                                                    onClick={() => handleDeleteAppraisal(appraisal.review_id)}
+                                                    style={{ backgroundColor: '#F44336' }}
+                                                >
+                                                    Delete
                                                 </button>
                                             </div>
                                         )}
@@ -278,61 +352,110 @@ function ManagerDashboard() {
                         <p className="no-appraisals">No probations found.</p>
                     ) : (
                         <div className="probations-list">
-                            {filteredProbations.map((probation, idx) => (
-                                <div key={idx} className="probation-card appraisal-card">
-                                    <div className="appraisal-header">
-                                        <h3>{probation.name}</h3>
-                                        <span className="employee-id">Role: {probation.role}</span>
-                                    </div>
-                                    
-                                    <div className="appraisal-details">
-                                        <p><strong>Department:</strong> {probation.department}</p>
-                                        <p><strong>Joining Date:</strong> {new Date(probation.date_of_joining).toLocaleDateString()}</p>
-                                        <p><strong>Review Date:</strong> {new Date(probation.date_of_review).toLocaleDateString()}</p>
-                                    </div>
+                            {filteredProbations.map((probation, idx) => {
+                                const isProbationExpanded = !!expandedCards[`probation_${probation.probation_id}`];
+                                return (
+                                    <div key={idx} className="probation-card appraisal-card">
+                                        <div className="appraisal-header">
+                                            <h3>{probation.name}</h3>
+                                            <span className="employee-id">Role: {probation.role}</span>
+                                        </div>
+                                        
+                                        <div className="appraisal-details">
+                                            <p><strong>Department:</strong> {probation.department}</p>
+                                            <p><strong>Joining Date:</strong> {new Date(probation.date_of_joining).toLocaleDateString()}</p>
+                                            <p><strong>Review Date:</strong> {new Date(probation.date_of_review).toLocaleDateString()}</p>
+                                        </div>
 
-                                    <div className="probation-ratings" style={{ marginTop: '1.5rem' }}>
-                                        <h4>Probation Assessment</h4>
-                                        <div className="ratings-grid">
-                                            <div className="rating-item">
-                                                <span className="rating-label">Functional/Technical Skills</span>
-                                                <RatingBadge rating={probation.functional_technical_skills} />
+                                        <button 
+                                            className="action-btn details-toggle-btn"
+                                            onClick={() => toggleExpandCard(`probation_${probation.probation_id}`)}
+                                            style={{
+                                                backgroundColor: 'transparent',
+                                                color: '#2196F3',
+                                                border: '1px solid #2196F3',
+                                                padding: '6px 12px',
+                                                borderRadius: '4px',
+                                                fontSize: '0.85rem',
+                                                fontWeight: 'bold',
+                                                cursor: 'pointer',
+                                                marginBottom: '1rem',
+                                                width: '100%',
+                                                transition: 'all 0.2s'
+                                            }}
+                                        >
+                                            {isProbationExpanded ? 'Hide Assessment Details ▲' : 'View Assessment Details ▼'}
+                                        </button>
+
+                                        {isProbationExpanded && (
+                                            <div className="collapsible-content">
+                                                <div className="probation-ratings" style={{ marginTop: '0.5rem' }}>
+                                                    <h4>Probation Assessment</h4>
+                                                    <div className="ratings-grid">
+                                                        <div className="rating-item">
+                                                            <span className="rating-label">Functional/Technical Skills</span>
+                                                            <RatingBadge rating={probation.functional_technical_skills} />
+                                                        </div>
+                                                        <div className="rating-item">
+                                                            <span className="rating-label">Result Orientation</span>
+                                                            <RatingBadge rating={probation.result_orientation} />
+                                                        </div>
+                                                        <div className="rating-item">
+                                                            <span className="rating-label">Creativity/Innovation</span>
+                                                            <RatingBadge rating={probation.creativity_innovation} />
+                                                        </div>
+                                                        <div className="rating-item">
+                                                            <span className="rating-label">Communication</span>
+                                                            <RatingBadge rating={probation.communication} />
+                                                        </div>
+                                                        <div className="rating-item">
+                                                            <span className="rating-label">Teamwork</span>
+                                                            <RatingBadge rating={probation.teamwork} />
+                                                        </div>
+                                                        <div className="rating-item">
+                                                            <span className="rating-label">Adaptability</span>
+                                                            <RatingBadge rating={probation.adaptability} />
+                                                        </div>
+                                                        <div className="rating-item">
+                                                            <span className="rating-label">Supervisory/Managerial</span>
+                                                            <RatingBadge rating={probation.supervisory_managerial} />
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="comments-section" style={{ marginBottom: '1rem' }}>
+                                                    <div className="comment-block">
+                                                        <h5>Appraiser's Comments</h5>
+                                                        <p>{probation.appraisers_comments || 'N/A'}</p>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div className="rating-item">
-                                                <span className="rating-label">Result Orientation</span>
-                                                <RatingBadge rating={probation.result_orientation} />
-                                            </div>
-                                            <div className="rating-item">
-                                                <span className="rating-label">Creativity/Innovation</span>
-                                                <RatingBadge rating={probation.creativity_innovation} />
-                                            </div>
-                                            <div className="rating-item">
-                                                <span className="rating-label">Communication</span>
-                                                <RatingBadge rating={probation.communication} />
-                                            </div>
-                                            <div className="rating-item">
-                                                <span className="rating-label">Teamwork</span>
-                                                <RatingBadge rating={probation.teamwork} />
-                                            </div>
-                                            <div className="rating-item">
-                                                <span className="rating-label">Adaptability</span>
-                                                <RatingBadge rating={probation.adaptability} />
-                                            </div>
-                                            <div className="rating-item">
-                                                <span className="rating-label">Supervisory/Managerial</span>
-                                                <RatingBadge rating={probation.supervisory_managerial} />
-                                            </div>
+                                        )}
+
+                                        <div className="action-buttons">
+                                            <button 
+                                                className="action-btn edit-btn"
+                                                onClick={() => navigate(`/probation?probation_id=${probation.probation_id}`)}
+                                            >
+                                                Edit
+                                            </button>
+                                            <button 
+                                                className="action-btn export-btn"
+                                                onClick={() => exportProbationToPDF(probation)}
+                                            >
+                                                Export
+                                            </button>
+                                            <button 
+                                                className="action-btn delete-btn"
+                                                onClick={() => handleDeleteProbation(probation.probation_id)}
+                                                style={{ backgroundColor: '#F44336' }}
+                                            >
+                                                Delete
+                                            </button>
                                         </div>
                                     </div>
-
-                                    <div className="comments-section">
-                                        <div className="comment-block">
-                                            <h5>Appraiser's Comments</h5>
-                                            <p>{probation.appraisers_comments || 'N/A'}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     )}
                 </div>
