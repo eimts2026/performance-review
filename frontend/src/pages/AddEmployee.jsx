@@ -1,5 +1,6 @@
 import './AddUser.css'
 import { useState } from 'react'
+import { API_BASE_URL } from '../apiConfig'
 
 function AddEmployee() {
     const [employee, setEmployee] = useState({
@@ -28,7 +29,7 @@ function AddEmployee() {
         e.preventDefault();
         
         try {
-            const response = await fetch("http://localhost:8800/users", {
+            const response = await fetch(`${API_BASE_URL}/users`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

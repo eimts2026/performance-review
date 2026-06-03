@@ -1,3 +1,5 @@
+import { API_BASE_URL } from '../apiConfig';
+
 export const exportAppraisalToPDF = async (appraisal) => {
     const printWindow = window.open('', '', 'height=800,width=1000');
     
@@ -386,7 +388,7 @@ export const exportProbationToPDF = async (probation) => {
     // Try to resolve the manager name from user ID
     let managerName = probation.department_head || 'N/A';
     try {
-        const response = await fetch("http://localhost:8800/users");
+        const response = await fetch(`${API_BASE_URL}/users`);
         if (response.ok) {
             const users = await response.json();
             const manager = users.find(u => String(u.employee_id) === String(probation.department_head));

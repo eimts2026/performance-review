@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import './Home.css';
 import { exportAppraisalToPDF, exportProbationToPDF } from '../components/ExportPDF';
+import { API_BASE_URL } from '../apiConfig';
 import emailjs from '@emailjs/browser';
 
 const uses = [
@@ -23,7 +24,7 @@ function Home() {
             return;
         }
         try {
-            await axios.delete(`http://localhost:8800/appraisals/${reviewId}`);
+            await axios.delete(`${API_BASE_URL}/appraisals/${reviewId}`);
             alert("Appraisal record deleted successfully.");
             
             if (appraisalObj && appraisalObj.manager_email) {
@@ -58,7 +59,7 @@ function Home() {
             return;
         }
         try {
-            await axios.delete(`http://localhost:8800/probation/${probationId}`);
+            await axios.delete(`${API_BASE_URL}/probation/${probationId}`);
             alert("Probation record deleted successfully.");
             
             if (probationObj && probationObj.department_head) {
@@ -127,7 +128,7 @@ function Home() {
 
     async function fetchAllUsers() {
         try {
-            const res = await axios.get("http://localhost:8800/users")
+            const res = await axios.get(`${API_BASE_URL}/users`)
             if (Array.isArray(res.data)) {
                 setUsers(res.data)
             } else {
@@ -141,7 +142,7 @@ function Home() {
 
     async function fetchRecentAppraisals() {
         try {
-            const res = await axios.get("http://localhost:8800/appraisals")
+            const res = await axios.get(`${API_BASE_URL}/appraisals`)
             if (Array.isArray(res.data)) {
                 setAppraisals(res.data)
             } else {
@@ -156,7 +157,7 @@ function Home() {
 
     async function fetchAllProbations() {
         try {
-            const res = await axios.get("http://localhost:8800/probation")
+            const res = await axios.get(`${API_BASE_URL}/probation`)
             if (Array.isArray(res.data)) {
                 setProbations(res.data)
             } else {

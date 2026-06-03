@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { initializeApp } from "firebase/app";
 import OptionRender from '../components/OptionRender';
 import emailjs from '@emailjs/browser'
+import { API_BASE_URL } from '../apiConfig'
 
 const form_top = [
     {id: "ap-name", Text: "Appraiser Name:", type: "text", name: "appraiser_name"},
@@ -77,7 +78,7 @@ function MainForm() {
 
     const fetchAppraisal = async (id) => {
         try {
-            const response = await fetch(`http://localhost:8800/appraisals/${id}`);
+            const response = await fetch(`${API_BASE_URL}/appraisals/${id}`);
             if(!response.ok) {
                 console.error("Failed to fetch appraisal:", response.status);
                 alert("Error loading appraisal details.");
@@ -151,7 +152,7 @@ function MainForm() {
 
     async function fetchEmployees() {
         try {
-            const response = await fetch("http://localhost:8800/users");
+            const response = await fetch(`${API_BASE_URL}/users`);
             if(!response.ok) {
                 console.error("Failed to fetch employees:", response.status);
                 setEmployees([]);
@@ -170,7 +171,7 @@ function MainForm() {
 
     async function fetchManagers() {
         try {
-            const response = await fetch("http://localhost:8800/managers");
+            const response = await fetch(`${API_BASE_URL}/managers`);
             if(!response.ok) {
                 console.error("Failed to fetch managers:", response.status);
                 setManagers([]);
@@ -235,7 +236,7 @@ function MainForm() {
     // Save to database
     const saveToDatabase = async () => {
         try {
-            const url = reviewId ? `http://localhost:8800/appraisals/${reviewId}` : "http://localhost:8800/appraisals";
+            const url = reviewId ? `${API_BASE_URL}/appraisals/${reviewId}` : `${API_BASE_URL}/appraisals`;
             const method = reviewId ? "PUT" : "POST";
             
             // Clean rating fields to null if they are empty strings to prevent CHECK constraint failures

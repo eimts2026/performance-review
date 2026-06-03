@@ -3,6 +3,7 @@ import { useState, useEffect } from "react"
 import { useNavigate } from 'react-router-dom'
 import OptionRender from '../components/OptionRender'
 import emailjs from '@emailjs/browser'
+import { API_BASE_URL } from '../apiConfig'
 
 const probation_metrics = [
     { label: "Functional / Technical Skills", field: "functional_technical_skills" },
@@ -85,7 +86,7 @@ function ProbationForm() {
 
     async function fetchProbationDetails(pId) {
         try {
-            const response = await fetch(`http://localhost:8800/probation/${pId}`);
+            const response = await fetch(`${API_BASE_URL}/probation/${pId}`);
             if (response.ok) {
                 const data = await response.json();
                 setProbation({
@@ -117,7 +118,7 @@ function ProbationForm() {
 
     async function fetchEmployees() {
         try {
-            const response = await fetch("http://localhost:8800/users");
+            const response = await fetch(`${API_BASE_URL}/users`);
             const data = await response.json();
             setEmployees(data);
             setLoadingEmployees(false);
@@ -129,7 +130,7 @@ function ProbationForm() {
 
     async function fetchManagers() {
         try {
-            const response = await fetch("http://localhost:8800/managers");
+            const response = await fetch(`${API_BASE_URL}/managers`);
             const data = await response.json();
             setManagers(data);
         } catch (error) {
@@ -217,7 +218,7 @@ function ProbationForm() {
         setSuccessMessage("")
         setErrorMessage("")
 
-        const url = isEditMode ? `http://localhost:8800/probation/${probationId}` : "http://localhost:8800/probation";
+        const url = isEditMode ? `${API_BASE_URL}/probation/${probationId}` : `${API_BASE_URL}/probation`;
         const method = isEditMode ? "PUT" : "POST";
 
         // Clean rating fields

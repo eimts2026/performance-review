@@ -4,6 +4,7 @@ import axios from 'axios';
 import './ManagerDashboard.css';
 import { exportAppraisalToPDF, exportProbationToPDF } from '../components/ExportPDF';
 import emailjs from '@emailjs/browser';
+import { API_BASE_URL } from '../apiConfig';
 
 function ManagerDashboard() {
     const [user, setUser] = useState(null);
@@ -28,7 +29,7 @@ function ManagerDashboard() {
             return;
         }
         try {
-            await axios.delete(`http://localhost:8800/appraisals/${reviewId}`);
+            await axios.delete(`${API_BASE_URL}/appraisals/${reviewId}`);
             alert("Appraisal record deleted successfully.");
             
             if (appraisalObj && appraisalObj.manager_email) {
@@ -63,7 +64,7 @@ function ManagerDashboard() {
             return;
         }
         try {
-            await axios.delete(`http://localhost:8800/probation/${probationId}`);
+            await axios.delete(`${API_BASE_URL}/probation/${probationId}`);
             alert("Probation record deleted successfully.");
             
             if (user && user.email && probationObj) {
@@ -120,7 +121,7 @@ function ManagerDashboard() {
 
     const fetchManagerAppraisals = async (managerName) => {
         try {
-            const res = await axios.get(`http://localhost:8800/appraisals/manager/${managerName}`);
+            const res = await axios.get(`${API_BASE_URL}/appraisals/manager/${managerName}`);
             if (Array.isArray(res.data)) {
                 setAppraisals(res.data);
             } else {
@@ -137,7 +138,7 @@ function ManagerDashboard() {
 
     const fetchManagerProbations = async (departmentHead) => {
         try {
-            const res = await axios.get(`http://localhost:8800/probation/manager/${departmentHead}`);
+            const res = await axios.get(`${API_BASE_URL}/probation/manager/${departmentHead}`);
             if (Array.isArray(res.data)) {
                 setProbations(res.data);
             } else {

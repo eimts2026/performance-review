@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './Login.css'
+import { API_BASE_URL } from '../apiConfig'
 
 function Login() {
     const [credentials, setCredentials] = useState({
@@ -25,7 +26,7 @@ function Login() {
         setLoading(true)
         
         try {
-            const response = await fetch("http://localhost:8800/login", {
+            const response = await fetch(`${API_BASE_URL}/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
