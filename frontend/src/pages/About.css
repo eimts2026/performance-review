@@ -6,6 +6,7 @@
     margin-bottom: 20px;
     border-bottom: 2px solid var(--soft-white);
     padding-bottom: 15px;
+    margin-left: 10px;
 }
 
 .badge {

@@ -23,7 +23,8 @@ function About() {
 
                     <div classNameName="version-info">
                         <p><strong>System Version:</strong> 1.0.0 (Internal Build)</p>
-                        <p><strong>Last Updated:</strong> October 2024</p>
+                        <p><strong>Last Updated:</strong> June 3rd 2026</p>
+                        <p><strong>Developed by: IT Inter - Joel Lawrence</strong></p>
                     </div>
                 </div>
             </section>
