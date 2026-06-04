@@ -1,5 +1,6 @@
 import './AddUser.css'
 import { useState } from 'react'
+import { API_BASE_URL } from '../apiConfig'
 
 function AddEmployee() {
     const [employee, setEmployee] = useState({
@@ -9,7 +10,7 @@ function AddEmployee() {
         email: "",
         position: "",
         date_joined: "",
-        role: "staff",
+        role: "manager",
         password: ""
     })
 
@@ -28,7 +29,7 @@ function AddEmployee() {
         e.preventDefault();
         
         try {
-            const response = await fetch("http://localhost:8800/users", {
+            const response = await fetch(`${API_BASE_URL}/users`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -47,7 +48,7 @@ function AddEmployee() {
                     email: "",
                     position: "",
                     date_joined: "",
-                    role: "staff",
+                    role: "manager",
                     password: ""
                 })
                 setTimeout(() => setSuccessMessage(""), 3000);
@@ -149,7 +150,6 @@ function AddEmployee() {
                             onChange={handleInputChange}
                             required
                         >
-                            <option value="staff">Staff</option>
                             <option value="manager">Manager</option>
                             <option value="CEO">CEO</option>
                             <option value="HR">HR</option>

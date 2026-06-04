@@ -1,5 +1,6 @@
 import './AddUser.css'
 import { useState } from 'react'
+import { API_BASE_URL } from '../apiConfig'
 
 function AddUser() {
     const [manager, setManager] = useState({
@@ -25,7 +26,7 @@ function AddUser() {
         e.preventDefault();
         
         try {
-            const response = await fetch("http://localhost:8800/users", {
+            const response = await fetch(`${API_BASE_URL}/users`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

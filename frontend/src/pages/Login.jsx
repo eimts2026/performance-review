@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './Login.css'
+import { API_BASE_URL } from '../apiConfig'
 
 function Login() {
     const [credentials, setCredentials] = useState({
@@ -25,7 +26,7 @@ function Login() {
         setLoading(true)
         
         try {
-            const response = await fetch("http://localhost:8800/login", {
+            const response = await fetch(`${API_BASE_URL}/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -40,7 +41,12 @@ function Login() {
                 setLoading(false)
                 navigate('/')
             } else {
-                setError("Invalid credentials. Please try again.")
+                let errMsg = "Invalid credentials. Please try again.";
+                try {
+                    const errData = await response.json();
+                    if (typeof errData === 'string') errMsg = errData;
+                } catch (_) {}
+                setError(errMsg)
                 setLoading(false)
             }
         } catch (error) {

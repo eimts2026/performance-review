@@ -9,6 +9,7 @@ import SignUp from './pages/SignIn'
 import AddEmployee from './pages/AddEmployee'
 import Login from './pages/Login'
 import ProbationForm from './pages/ProbationForm'
+import ManagerDashboard from './pages/ManagerDashboard'
 
 // NavBar
 import NavBar from './components/NavBar'
@@ -32,6 +33,7 @@ function App () {
         <Route path="/addEmployee" element={<AddEmployee />} />
         <Route path="/login" element={<Login />} />
         <Route path="/probation" element={<ProbationForm />} />
+        <Route path="/manager-dashboard" element={<ManagerDashboard />} />
       </Routes>
     </>
   );
