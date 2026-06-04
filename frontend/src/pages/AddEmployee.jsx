@@ -10,7 +10,7 @@ function AddEmployee() {
         email: "",
         position: "",
         date_joined: "",
-        role: "manager",
+        role: "staff",
         password: ""
     })
 
@@ -48,7 +48,7 @@ function AddEmployee() {
                     email: "",
                     position: "",
                     date_joined: "",
-                    role: "manager",
+                    role: "staff",
                     password: ""
                 })
                 setTimeout(() => setSuccessMessage(""), 3000);
@@ -153,6 +153,7 @@ function AddEmployee() {
                             <option value="manager">Manager</option>
                             <option value="CEO">CEO</option>
                             <option value="HR">HR</option>
+                            <option value="STAFF">Staff</option>
                         </select>
 
                         <label htmlFor="password">Password:</label>
